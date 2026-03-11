@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小红书笔记限流一键检测工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #ff2442;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #ff2442;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #e01f3b;
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 6px;
+            display: none;
+        }
+        .normal {
+            background-color: #e8f5e9;
+            border: 1px solid #4caf50;
+        }
+        .suspect {
+            background-color: #fff8e1;
+            border: 1px solid #ffc107;
+        }
+        .limit {
+            background-color: #ffebee;
+            border: 1px solid #f44336;
+        }
+        .result h2 {
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        .result p {
+            line-height: 1.6;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .tips {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0f8ff;
+            border-radius: 6px;
+        }
+        .tips h3 {
+            color: #2196f3;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>小红书笔记限流一键检测工具</h1>
+        
+        <div class="form-group">
+            <label for="publishTime">1. 笔记发布时长（小时）</label>
+            <input type="number" id="publishTime" placeholder="例如：24" min="0" required>
+        </div>
+
+        <div class="form-group">
+            <label for="viewCount">2. 总浏览量（小眼睛）</label>
+            <input type="number" id="viewCount" placeholder="例如：500" min="0" required>
+        </div>
+
+        <div class="form-group">
+            <label for="recommendRatio">3. 推荐流量占比（%）</label>
+            <input type="number" id="recommendRatio" placeholder="例如：30" min="0" max="100" required>
+        </div>
+
+        <div class="form-group">
+            <label for="interactCount">4. 点赞+收藏+评论总数</label>
+            <input type="number" id="interactCount" placeholder="例如：20" min="0" required>
+        </div>
+
+        <div class="form-group">
+            <label for="fanRatio">5. 粉丝观看占比（%）</label>
+            <input type="number" id="fanRatio" placeholder="例如：20" min="0" max="100" required>
+        </div>
+
+        <div class="form-group">
+            <label for="chipStatus">6. 能否投薯条</label>
+            <select id="chipStatus" required>
+                <option value="">请选择</option>
+                <option value="1">能</option>
+                <option value="0">不能</option>
+                <option value="2">没试过</option>
+            </select>
+        </div>
+
+        <button onclick="checkLimit()">一键检测</button>
+
+        <div id="resultBox" class="result"></div>
+
+        <div class="tips">
+            <h3>数据获取说明</h3>
+            <p>1. 推荐流量占比/粉丝观看占比：我 → 创作中心 → 笔记数据 → 目标笔记</p>
+            <p>2. 薯条权限：笔记右下角「…」→ 薯条推广，查看是否可投</p>
+            <p>3. 建议以发布24小时后的稳定数据为准</p>
+        </div>
+    </div>
+
+    <script>
+        function checkLimit() {
+            // 获取输入数据
+            const publishTime = parseFloat(document.getElementById('publishTime').value);
+            const viewCount = parseFloat(document.getElementById('viewCount').value);
+            const recommendRatio = parseFloat(document.getElementById('recommendRatio').value);
+            const interactCount = parseFloat(document.getElementById('interactCount').value);
+            const fanRatio = parseFloat(document.getElementById('fanRatio').value);
+            const chipStatus = document.getElementById('chipStatus').value;
+
+            // 计算互动率
+            const interactRate = viewCount === 0 ? 0 : (interactCount / viewCount) * 100;
+            
+            // 初始化结果
+            let resultType = "normal";
+            let resultTitle = "";
+            let resultDesc = "";
+            let fixTips = "";
+
+            // 核心判定逻辑
+            if (publishTime >= 24) {
+                // 24小时以上数据判定
+                if (viewCount < 500 || recommendRatio < 15 || fanRatio > 60 || chipStatus === "0") {
+                    if (chipStatus === "0" || (viewCount < 200 && recommendRatio < 10)) {
+                        // 明确限流
+                        resultType = "limit";
+                        resultTitle = "❌ 明确限流";
+                        resultDesc = `你的笔记存在明确限流特征：
+1. 24小时浏览量${viewCount}（正常应≥500）；
+2. 推荐流量占比${recommendRatio}%（正常应≥20%）；
+3. 粉丝观看占比${fanRatio}%（正常应≤40%）；
+4. 互动率${interactRate.toFixed(2)}%（正常应≥3%）；
+5. 薯条投放权限：${chipStatus === "1" ? "可投" : chipStatus === "0" ? "不可投" : "未测试"}。`;
+                        fixTips = "修复建议：\n1. 自查笔记是否含敏感词/硬广/非原创内容，删除违规部分后重新编辑发布；\n2. 若内容无违规，通过「帮助与客服→笔记申诉」申请恢复推荐；\n3. 暂停发布同类内容1-2天，避免账号持续被限制。";
+                    } else {
+                        // 疑似限流
+                        resultType = "suspect";
+                        resultTitle = "⚠️ 疑似限流";
+                        resultDesc = `你的笔记存在疑似限流特征：
+1. 24小时浏览量${viewCount}（略低于正常水平）；
+2. 推荐流量占比${recommendRatio}%（接近限流阈值）；
+3. 粉丝观看占比${fanRatio}%（偏高）；
+4. 互动率${interactRate.toFixed(2)}%（略低）。`;
+                        fixTips = "修复建议：\n1. 优化笔记封面/标题，提升自然点击率；\n2. 主动和评论区用户互动，提升互动率；\n3. 观察48小时，若流量仍无增长，可重新发布笔记。";
+                    }
+                } else {
+                    // 正常
+                    resultType = "normal";
+                    resultTitle = "✅ 正常";
+                    resultDesc = `你的笔记流量正常：
+1. 24小时浏览量${viewCount}（达标）；
+2. 推荐流量占比${recommendRatio}%（达标）；
+3. 粉丝观看占比${fanRatio}%（正常）；
+4. 互动率${interactRate.toFixed(2)}%（达标）。`;
+                    fixTips = "优化建议：\n1. 保持当前内容风格，持续输出优质内容；\n2. 可适当引导用户互动，进一步提升笔记热度；\n3. 关注笔记72小时数据变化，及时调整内容方向。";
+                }
+            } else {
+                // 24小时以内数据判定
+                if (viewCount < 200 || recommendRatio < 10 || chipStatus === "0") {
+                    resultType = "suspect";
+                    resultTitle = "⚠️ 疑似限流（数据未稳定）";
+                    resultDesc = `当前笔记发布时长仅${publishTime}小时，数据尚未稳定，但已出现疑似限流信号：
+1. 短时浏览量${viewCount}（偏低）；
+2. 推荐流量占比${recommendRatio}%（偏低）；
+3. 薯条投放权限：${chipStatus === "1" ? "可投" : chipStatus === "0" ? "不可投" : "未测试"}。`;
+                    fixTips = "建议：\n1. 等待24小时后再检测，数据更准确；\n2. 期间不要频繁修改笔记，避免触发二次审核；\n3. 若24小时后数据仍差，再按限流处理。";
+                } else {
+                    resultType = "normal";
+                    resultTitle = "✅ 暂未发现限流（数据未稳定）";
+                    resultDesc = `当前笔记发布时长${publishTime}小时，数据尚未稳定，但暂未发现限流信号：
+1. 短时浏览量${viewCount}（正常）；
+2. 推荐流量占比${recommendRatio}%（正常）。`;
+                    fixTips = "建议：\n1. 继续观察数据至24小时；\n2. 保持账号正常互动，避免违规操作。";
+                }
+            }
+
+            // 展示结果
+            const resultBox = document.getElementById('resultBox');
+            resultBox.className = `result ${resultType}`;
+            resultBox.innerHTML = `
+                <h2>${resultTitle}</h2>
+                <p>${resultDesc.replace(/\n/g, '<br>')}</p>
+                <h3>处理建议</h3>
+                <p>${fixTips.replace(/\n/g, '<br>')}</p>
+            `;
+            resultBox.style.display = "block";
+            
+            // 滚动到结果区域
+            resultBox.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

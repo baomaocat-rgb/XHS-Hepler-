@@ -1698,6 +1698,7 @@
     const STORAGE_LAST_GOOD_KEY = `${STORAGE_KEY}::last_good`;
     const STORAGE_SNAPSHOT_INDEX_KEY = `${STORAGE_KEY}::snapshot_index`;
     const STORAGE_SNAPSHOT_PREFIX = `${STORAGE_KEY}::snapshot::`;
+    const EMBEDDED_SAVED_AT_FALLBACK = 4102444800000; // 2100-01-01 to beat stale local caches
     const EMBEDDED_STATE_RAW =
       typeof window.__VIBE_EMBEDDED_STATE_RAW__ === "string" ? window.__VIBE_EMBEDDED_STATE_RAW__ : "";
     const EMBEDDED_STATE_OBJECT =
@@ -3151,20 +3152,20 @@
 
     async function loadPersistedState() {
       const parsedCandidates = [];
-      const pushCandidate = (raw, sourceWeight = 0) => {
+      const pushCandidate = (raw, sourceWeight = 0, savedAtFallback = 0) => {
         const parsed = safeParseSnapshot(typeof raw === "string" ? raw : null);
         if (!parsed) return;
-        const savedAt = Number(parsed.savedAt) || 0;
+        const savedAt = Number(parsed.savedAt) || Number(savedAtFallback) || 0;
         parsedCandidates.push({ parsed, savedAt, sourceWeight });
       };
 
       try { pushCandidate(localStorage.getItem(STORAGE_KEY), 20); } catch (err) {}
       try { pushCandidate(localStorage.getItem(STORAGE_LAST_GOOD_KEY), 10); } catch (err) {}
       try { pushCandidate(localStorage.getItem(STORAGE_KEY_BASE), 5); } catch (err) {}
-      if (EMBEDDED_STATE_RAW) pushCandidate(EMBEDDED_STATE_RAW, 35);
+      if (EMBEDDED_STATE_RAW) pushCandidate(EMBEDDED_STATE_RAW, 35, EMBEDDED_SAVED_AT_FALLBACK);
       if (!EMBEDDED_STATE_RAW && EMBEDDED_STATE_OBJECT) {
         try {
-          pushCandidate(JSON.stringify(EMBEDDED_STATE_OBJECT), 35);
+          pushCandidate(JSON.stringify(EMBEDDED_STATE_OBJECT), 35, EMBEDDED_SAVED_AT_FALLBACK);
         } catch (err) {
           // ignore invalid embedded object
         }

@@ -1,259 +1,4284 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><!-- 微信分享卡片配置 -->
-<meta property="og:title" content="小红书限流一键检测工具" />
-<meta property="og:description" content="输入数据自动判断笔记是否限流" />
-<meta property="og:image" content="https://github.com/baomaocat-rgb/XHS-Hepler-/blob/main/cover.png?raw=true" />
-<meta property="og:url" content="https://xhs.github.io/" />
-<meta property="og:type" content="website" />
-<!-- 微信专属适配 -->
-<meta name="wechat-webview-api-version" content="1.0" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />小红书笔记限流一键检测工具</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Microsoft Yahei", sans-serif;
-        }
-        body {
-            background-color: #f5f5f5;
-            padding: 20px;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #ff2442;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 24px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-        }
-        input, select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-        }
-        button {
-            width: 100%;
-            padding: 15px;
-            background-color: #ff2442;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        button:hover {
-            background-color: #e01f3b;
-        }
-        .result {
-            margin-top: 30px;
-            padding: 20px;
-            border-radius: 6px;
-            display: none;
-        }
-        .normal {
-            background-color: #e8f5e9;
-            border: 1px solid #4caf50;
-        }
-        .suspect {
-            background-color: #fff8e1;
-            border: 1px solid #ffc107;
-        }
-        .limit {
-            background-color: #ffebee;
-            border: 1px solid #f44336;
-        }
-        .result h2 {
-            margin-bottom: 15px;
-            font-size: 20px;
-        }
-        .result p {
-            line-height: 1.6;
-            margin-bottom: 10px;
-            color: #333;
-        }
-        .tips {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #f0f8ff;
-            border-radius: 6px;
-        }
-        .tips h3 {
-            color: #2196f3;
-            margin-bottom: 10px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>大模型 Vibe Coding 可交互页面设计 · 教程PPT</title>
+  <style>
+    :root {
+      --mr-label-primary: #3d3d39;
+      --mr-label-secondary: rgba(61, 61, 57, 0.62);
+      --mr-label-tertiary: rgba(61, 61, 57, 0.42);
+      --mr-bg-primary: #ffffff;
+      --mr-bg-secondary: #f4f5f2;
+      --mr-fill-primary: rgba(126, 126, 87, 0.2);
+      --mr-fill-secondary: rgba(126, 126, 87, 0.12);
+      --mr-border-primary: rgba(126, 126, 87, 0.16);
+      --mr-border-secondary: rgba(126, 126, 87, 0.1);
+      --mr-dark: #1f1f1e;
+      --mr-dark-soft: #2e2e2c;
+      --radius-sm: 10px;
+      --radius-md: 14px;
+      --radius-lg: 18px;
+      --shadow-sm: 0 4px 10px rgba(18, 18, 18, 0.06);
+      --shadow-md: 0 10px 28px rgba(18, 18, 18, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      height: 100%;
+      color: var(--mr-label-primary);
+      font-family: "Inter", "Inter Variable", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: var(--mr-bg-secondary);
+      overflow: hidden;
+    }
+
+    .app {
+      height: 100vh;
+      min-height: 0;
+      padding: 12px;
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .app.sidebar-collapsed {
+      grid-template-columns: 84px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      border-radius: var(--radius-lg);
+      background: var(--mr-bg-primary);
+      border: 1px solid var(--mr-border-secondary);
+      box-shadow: var(--shadow-sm);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      height: calc(100vh - 24px);
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .brand {
+      padding: 14px;
+      border-bottom: 1px solid var(--mr-border-secondary);
+      background: linear-gradient(180deg, #ffffff 0%, #fafbf9 100%);
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.45;
+      letter-spacing: -0.01em;
+      font-weight: 600;
+    }
+
+    .brand p {
+      margin: 6px 0 0;
+      font-size: 11px;
+      color: var(--mr-label-secondary);
+      line-height: 1.55;
+    }
+
+    .edit-mode .brand [contenteditable="true"] {
+      border: 1px dashed rgba(61, 61, 57, 0.32);
+      border-radius: 8px;
+      padding: 4px 6px;
+      background: #fff;
+      outline: none;
+    }
+
+    .dir-wrap {
+      padding: 10px;
+      overflow: auto;
+      min-height: 0;
+      display: grid;
+      gap: 6px;
+      align-content: start;
+      background: #f9faf8;
+    }
+
+    .dir-item {
+      border-radius: var(--radius-sm);
+      background: #fff;
+      border: 1px solid var(--mr-border-secondary);
+      padding: 8px;
+      cursor: pointer;
+      transition: border-color 160ms ease, background-color 160ms ease;
+    }
+
+    .dir-item:hover {
+      border-color: var(--mr-border-primary);
+      background: #fcfcfb;
+    }
+
+    .dir-item.active {
+      border-color: rgba(61, 61, 57, 0.35);
+      background: #f7f7f5;
+    }
+
+    .dir-item strong {
+      font-size: 12px;
+      color: var(--mr-label-primary);
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    .dir-item p {
+      margin: 3px 0 0;
+      font-size: 11px;
+      color: var(--mr-label-secondary);
+      line-height: 1.45;
+    }
+
+    .dir-edit-row {
+      display: grid;
+      gap: 5px;
+      margin-top: 4px;
+    }
+
+    .dir-edit-title,
+    .dir-edit-desc {
+      width: 100%;
+      border: 1px solid var(--mr-border-primary);
+      border-radius: 8px;
+      background: #fff;
+      font-size: 12px;
+      color: var(--mr-label-primary);
+      padding: 6px 8px;
+      outline: none;
+      line-height: 1.4;
+    }
+
+    .dir-edit-desc {
+      min-height: 54px;
+      resize: vertical;
+      font-size: 11px;
+    }
+
+    .dir-item[draggable="true"] {
+      cursor: grab;
+    }
+
+    .dir-item.dragging {
+      opacity: 0.55;
+    }
+
+    .dir-item.drop-target {
+      border-color: rgba(59, 130, 246, 0.55);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1) inset;
+    }
+
+    .app.sidebar-collapsed .brand p,
+    .app.sidebar-collapsed .dir-item p,
+    .app.sidebar-collapsed .dir-item .dir-text,
+    .app.sidebar-collapsed .sidebar-foot .editor-panel {
+      display: none;
+    }
+
+    .app.sidebar-collapsed .brand {
+      padding: 10px 8px;
+    }
+
+    .app.sidebar-collapsed .brand h1 {
+      display: none;
+    }
+
+    .app.sidebar-collapsed .brand-row {
+      justify-content: center;
+    }
+
+    .app.sidebar-collapsed .dir-wrap {
+      padding: 8px 6px;
+    }
+
+    .app.sidebar-collapsed .dir-item {
+      padding: 8px 4px;
+      text-align: center;
+    }
+
+    .app.sidebar-collapsed .dir-item strong {
+      font-size: 13px;
+    }
+
+    .app.sidebar-collapsed .sidebar-foot {
+      display: none;
+    }
+
+    .sidebar-foot {
+      padding: 10px;
+      border-top: 1px solid var(--mr-border-secondary);
+      background: #fff;
+      display: grid;
+      gap: 8px;
+    }
+
+    .btn {
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      padding: 8px 11px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 150ms ease;
+      letter-spacing: 0;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-primary {
+      color: #fff;
+      background: var(--mr-dark);
+      border-color: var(--mr-dark);
+      box-shadow: 0 6px 14px rgba(18, 18, 18, 0.16);
+    }
+
+    .btn-primary:hover {
+      background: var(--mr-dark-soft);
+      border-color: var(--mr-dark-soft);
+    }
+
+    .btn-lite {
+      color: var(--mr-label-primary);
+      background: #fff;
+      border: 1px solid var(--mr-border-primary);
+    }
+
+    .btn-lite:hover {
+      background: #f8f8f6;
+    }
+
+    .btn-warn {
+      color: #9a3412;
+      background: #fff7ed;
+      border: 1px solid #fdba74;
+    }
+
+    .editor-panel {
+      display: none;
+      gap: 10px;
+      margin-top: 2px;
+    }
+
+    .edit-mode .editor-panel {
+      display: grid;
+    }
+
+    .editor-box {
+      border-radius: 12px;
+      background: #f8f9f6;
+      border: 1px solid var(--mr-border-secondary);
+      padding: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .editor-box h3 {
+      margin: 0;
+      font-size: 12px;
+      color: var(--mr-label-primary);
+      font-weight: 600;
+    }
+
+    .editor-box label {
+      display: block;
+      font-size: 11px;
+      color: var(--mr-label-secondary);
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .editor-box input,
+    .editor-box textarea,
+    .editor-box select {
+      width: 100%;
+      border: 1px solid var(--mr-border-primary);
+      border-radius: 8px;
+      padding: 8px 9px;
+      font-size: 12px;
+      color: var(--mr-label-primary);
+      background: #fff;
+      outline: none;
+    }
+
+    .editor-box input:focus,
+    .editor-box textarea:focus,
+    .editor-box select:focus {
+      border-color: rgba(61, 61, 57, 0.45);
+      box-shadow: 0 0 0 3px rgba(61, 61, 57, 0.08);
+    }
+
+    .editor-box textarea {
+      min-height: 56px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .list-editor {
+      display: grid;
+      gap: 7px;
+      max-height: 180px;
+      overflow: auto;
+    }
+
+    .list-item {
+      border-radius: 10px;
+      background: #fff;
+      border: 1px solid var(--mr-border-secondary);
+      padding: 8px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .list-item .head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--mr-label-secondary);
+      font-weight: 600;
+    }
+
+    .main {
+      border-radius: var(--radius-lg);
+      background: var(--mr-bg-primary);
+      border: 1px solid var(--mr-border-secondary);
+      box-shadow: var(--shadow-md);
+      height: calc(100vh - 24px);
+      min-height: 0;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      overflow: hidden;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--mr-border-secondary);
+      background: #fbfcfa;
+    }
+
+    .stage-head {
+      display: inline-flex;
+      align-items: center;
+      min-width: 0;
+      max-width: 66%;
+    }
+
+    .top-title {
+      margin-left: 0;
+      font-size: 12px;
+      color: var(--mr-label-secondary);
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .save-status {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--mr-label-tertiary);
+      min-width: 120px;
+      text-align: right;
+    }
+
+    .save-status.saved { color: #0f766e; }
+    .save-status.saving { color: #1d4ed8; }
+    .save-status.warn { color: #b45309; }
+    .save-status.error { color: #b42318; }
+    .save-status.dirty { color: #92400e; }
+
+    .progress {
+      font-size: 12px;
+      color: var(--mr-label-secondary);
+      font-weight: 600;
+      min-width: 58px;
+      text-align: center;
+    }
+
+    .stage {
+      padding: 12px;
+      overflow: auto;
+      min-height: 0;
+      background: #f6f7f4;
+    }
+
+    .slide {
+      display: none;
+      animation: fadeIn 220ms ease;
+    }
+
+    .slide.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero {
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid var(--mr-border-secondary);
+      padding: 18px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #4b5563;
+      background: #f1f5f9;
+      padding: 4px 10px;
+    }
+
+    .slide-main-title {
+      margin: 10px 0 7px;
+      font-size: clamp(24px, 3.2vw, 38px);
+      line-height: 1.18;
+      letter-spacing: -0.02em;
+      font-weight: 600;
+      color: var(--mr-label-primary);
+    }
+
+    .slide-main-subtitle {
+      margin: 0;
+      max-width: 900px;
+      color: var(--mr-label-secondary);
+      font-size: clamp(14px, 1.7vw, 17px);
+      line-height: 1.68;
+    }
+
+    .inline-editable {
+      border-radius: 8px;
+      transition: box-shadow 160ms ease, border-color 160ms ease, background-color 160ms ease;
+    }
+
+    .edit-mode .slide.active .inline-editable {
+      border: 1px dashed rgba(61, 61, 57, 0.28);
+      background: #fafbf8;
+      padding: 3px 6px;
+      cursor: text;
+    }
+
+    .stage-toolbar {
+      margin-top: 10px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .stage-field,
+    .stage-textarea {
+      width: 100%;
+      border: 1px solid var(--mr-border-primary);
+      border-radius: 8px;
+      background: #fff;
+      font-size: 13px;
+      color: var(--mr-label-primary);
+      padding: 8px 10px;
+      outline: none;
+      line-height: 1.6;
+    }
+
+    .stage-textarea {
+      min-height: 86px;
+      resize: vertical;
+    }
+
+    .stage-field:focus,
+    .stage-textarea:focus {
+      border-color: rgba(61, 61, 57, 0.42);
+      box-shadow: 0 0 0 3px rgba(61, 61, 57, 0.08);
+    }
+
+    .file-upload {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--mr-border-primary);
+      border-radius: 999px;
+      background: #fff;
+      padding: 4px 10px;
+      font-size: 11px;
+      color: var(--mr-label-secondary);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .file-upload input {
+      display: none;
+    }
+
+    .image-size-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 0;
+    }
+
+    .compact-title .slide-main-title {
+      font-size: clamp(19px, 2.3vw, 28px);
+      margin-bottom: 4px;
+    }
+
+    .compact-title .slide-main-subtitle {
+      font-size: clamp(12px, 1.2vw, 14px);
+      line-height: 1.45;
+    }
+
+    .grid {
+      margin-top: 13px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .card {
+      border-radius: 10px;
+      background: #fff;
+      border: 1px solid var(--mr-border-secondary);
+      padding: 11px;
+    }
+
+    .card h3 {
+      margin: 0 0 5px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--mr-label-primary);
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--mr-label-secondary);
+      font-size: 13px;
+      line-height: 1.62;
+    }
+
+    #coverPoints .card h3,
+    #coverPoints .card p {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .list {
+      margin: 12px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+
+    .list li {
+      border-radius: 10px;
+      background: #f8f9f6;
+      border: 1px solid var(--mr-border-secondary);
+      padding: 10px;
+      color: var(--mr-label-primary);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .goal-points {
+      margin-top: 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .goal-item {
+      border-radius: 10px;
+      background: #f8f9f6;
+      border: 1px solid var(--mr-border-secondary);
+      padding: 9px 10px;
+    }
+
+    .goal-item-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .goal-item-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--mr-label-primary);
+      line-height: 1.45;
+      flex: 1 1 220px;
+    }
+
+    .goal-toggle {
+      border: 1px solid var(--mr-border-primary);
+      background: #fff;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 11px;
+      color: var(--mr-label-secondary);
+      cursor: pointer;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .goal-item-body {
+      margin-top: 12px;
+      color: var(--mr-label-secondary);
+      font-size: 13px;
+      line-height: 1.65;
+      display: none;
+      white-space: pre-wrap;
+    }
+
+    .goal-item-body.open {
+      display: grid;
+      gap: 20px;
+    }
+
+    .goal-media {
+      margin-top: 0;
+      border: 1px solid var(--mr-border-secondary);
+      border-radius: 8px;
+      min-height: 90px;
+      background: #fff;
+      padding: 8px;
+      display: grid;
+      place-items: center;
+      color: var(--mr-label-tertiary);
+      font-size: 12px;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .goal-media img {
+      width: 100%;
+      max-height: none;
+      object-fit: cover;
+      border-radius: 6px;
+      display: block;
+    }
+
+    .goal-link {
+      display: inline-block;
+      margin-top: 7px;
+      font-size: 12px;
+      color: #2563eb;
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    .goal-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tools-wrap,
+    .upload-wrap,
+    .flow-wrap,
+    .cases-wrap,
+    .delivery-wrap {
+      margin-top: 14px;
+      border-radius: 10px;
+      background: #fff;
+      border: 1px solid var(--mr-border-secondary);
+      padding: 11px;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .tool-switch-btn {
+      appearance: none;
+      border-radius: 10px;
+      background: #fff;
+      border: 1px solid var(--mr-border-secondary);
+      padding: 0;
+      text-align: left;
+      cursor: pointer;
+      overflow: hidden;
+      transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .tool-switch-btn:hover {
+      border-color: var(--mr-border-primary);
+      transform: translateY(-1px);
+    }
+
+    .tool-switch-btn.active {
+      border-color: rgba(61, 61, 57, 0.36);
+      box-shadow: 0 0 0 2px rgba(61, 61, 57, 0.08) inset;
+    }
+
+    .tool-card {
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .tool-image {
+      height: 96px;
+      background: linear-gradient(160deg, #f5f5f3, #eceee9);
+      display: grid;
+      place-items: center;
+      color: var(--mr-label-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tool-image::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 42px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.9) 70%, rgba(255, 255, 255, 1));
+      pointer-events: none;
+    }
+
+    .tool-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .tool-image img[data-tool-drag],
+    .tool-detail-media img[data-tool-drag] {
+      cursor: grab;
+      user-select: none;
+      -webkit-user-drag: none;
+      touch-action: none;
+    }
+
+    .tool-image img[data-tool-drag].dragging,
+    .tool-detail-media img[data-tool-drag].dragging {
+      cursor: grabbing;
+    }
+
+    .tool-body {
+      padding: 9px;
+      background: #fff;
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+      position: relative;
+      z-index: 1;
+    }
+
+    .tool-body h4 {
+      margin: 0 0 5px;
+      font-size: 14px;
+      color: var(--mr-label-primary);
+      font-weight: 600;
+    }
+
+    .tool-body p {
+      margin: 0;
+      color: var(--mr-label-secondary);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .tool-body a {
+      display: inline-block;
+      margin-top: 5px;
+      font-size: 12px;
+      color: #2563eb;
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    .tool-detail {
+      margin-top: 10px;
+      border-radius: 10px;
+      border: 1px solid var(--mr-border-secondary);
+      background: #f8f9f6;
+      padding: 12px;
+      min-height: 300px;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .tool-detail-copy h4 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      color: var(--mr-label-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .tool-detail-copy p {
+      margin: 0;
+      font-size: 14px;
+      color: var(--mr-label-secondary);
+      line-height: 1.72;
+      white-space: pre-wrap;
+    }
+
+    .tool-detail-copy a {
+      display: inline-block;
+      margin-top: 10px;
+      color: #2563eb;
+      font-size: 12px;
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    .tool-detail-media {
+      border-radius: 10px;
+      border: 1px solid var(--mr-border-secondary);
+      background: #fff;
+      min-height: 276px;
+      display: grid;
+      place-items: center;
+      color: var(--mr-label-tertiary);
+      font-size: 13px;
+      padding: 8px;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .tool-detail-media img {
+      width: 100%;
+      height: 100%;
+      max-height: none;
+      object-fit: cover;
+      display: block;
+    }
+
+    .tab-header {
+      display: inline-flex;
+      gap: 6px;
+      background: #f2f3ef;
+      border: 1px solid var(--mr-border-secondary);
+      border-radius: 999px;
+      padding: 4px;
+    }
+
+    .tab-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 6px 11px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      background: transparent;
+      color: var(--mr-label-secondary);
+    }
+
+    .tab-btn.active {
+      background: var(--mr-dark);
+      color: #fff;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .upload-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: nowrap;
+      margin-bottom: 10px;
+    }
+
+    .upload-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1 1 auto;
+      min-width: 0;
+      flex-wrap: nowrap;
+      overflow: hidden;
+    }
+
+    .project-tabs {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      max-width: min(44vw, 460px);
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .project-tab {
+      border: 1px solid var(--mr-border-primary);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--mr-label-secondary);
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .project-tab.active {
+      background: var(--mr-dark);
+      color: #fff;
+      border-color: var(--mr-dark);
+    }
+
+    .project-tab .x {
+      font-size: 11px;
+      opacity: 0.75;
+    }
+
+    .upload-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: nowrap;
+    }
+
+    .upload-actions.hidden { display: none; }
+
+    .demo-frame {
+      width: 100%;
+      height: 640px;
+      border: 1px solid var(--mr-border-secondary);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .prompt-input {
+      width: 100%;
+      border: 1px solid var(--mr-border-primary);
+      border-radius: 10px;
+      padding: 10px;
+      min-height: 120px;
+      resize: none;
+      font-size: 13px;
+      line-height: 1.6;
+      outline: none;
+      background: #fff;
+      color: var(--mr-label-primary);
+    }
+
+    .round-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .round-btn {
+      border: 1px solid var(--mr-border-primary);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--mr-label-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    .round-btn.active {
+      background: var(--mr-dark);
+      color: #fff;
+      border-color: var(--mr-dark);
+    }
+
+    .prompt-input:focus {
+      border-color: rgba(61, 61, 57, 0.45);
+      box-shadow: 0 0 0 3px rgba(61, 61, 57, 0.08);
+    }
+
+    .prompt-preview {
+      margin-top: 10px;
+      border-radius: 10px;
+      background: #f8f9f6;
+      border: 1px solid var(--mr-border-secondary);
+      padding: 12px;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--mr-label-primary);
+    }
+
+    .prompt-preview h1,
+    .prompt-preview h2,
+    .prompt-preview h3 {
+      margin: 0.4em 0 0.5em;
+      color: #111827;
+      letter-spacing: -0.01em;
+    }
+
+    .prompt-preview p { margin: 0.4em 0; }
+
+    .prompt-preview ul {
+      margin: 0.2em 0 0.8em 1.1em;
+      padding: 0;
+    }
+
+    .prompt-preview code {
+      background: #eceef0;
+      border-radius: 5px;
+      padding: 1px 5px;
+      font-size: 12px;
+    }
+
+    .prompt-preview pre {
+      background: #1f2937;
+      color: #e5e7eb;
+      padding: 10px;
+      border-radius: 8px;
+      overflow: auto;
+    }
+
+    .flow-wrap {
+      background: #f7f8f5;
+      padding: 8px;
+    }
+
+    .flow-canvas {
+      min-height: 540px;
+      border-radius: 10px;
+      border: 1px solid var(--mr-border-secondary);
+      background:
+        radial-gradient(circle at 0 0, rgba(61, 61, 57, 0.06) 1px, transparent 1px),
+        #f8f9f6;
+      background-size: 22px 22px;
+      padding: 12px;
+      overflow: auto;
+    }
+
+    .flow-track {
+      position: relative;
+      min-width: 930px;
+      display: flex;
+      align-items: flex-start;
+      gap: 22px;
+      padding: 8px;
+    }
+
+    .flow-node {
+      min-width: 210px;
+      max-width: 260px;
+      border-radius: 10px;
+      background: #fff;
+      border: 1px solid var(--mr-border-primary);
+      padding: 10px;
+      position: relative;
+    }
+
+    .flow-node.tone-0 { border-color: rgba(34, 197, 94, 0.45); }
+    .flow-node.tone-1 { border-color: rgba(59, 130, 246, 0.4); }
+    .flow-node.tone-2 { border-color: rgba(249, 115, 22, 0.42); }
+
+    .flow-node[data-flow-node] {
+      z-index: 2;
+    }
+
+    .flow-node h4 {
+      margin: 0;
+      font-size: 13px;
+      color: var(--mr-label-primary);
+      font-weight: 600;
+    }
+
+    .flow-node p {
+      margin: 6px 0 0;
+      font-size: 12px;
+      color: var(--mr-label-secondary);
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    .flow-node img {
+      margin-top: 8px;
+      width: 100%;
+      max-height: none;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid var(--mr-border-secondary);
+      display: block;
+      cursor: zoom-in;
+    }
+
+    .flow-gallery {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .flow-gallery img {
+      margin-top: 0;
+      max-height: none;
+    }
+
+    .flow-links {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: visible;
+    }
+
+    .flow-links path {
+      stroke: rgba(100, 116, 139, 0.55);
+      stroke-width: 1.2;
+      fill: none;
+    }
+
+    .flow-template-track {
+      min-width: 930px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+    }
+
+    .flow-inline-arrow {
+      width: 12px;
+      height: 2px;
+      background: rgba(100, 116, 139, 0.55);
+      position: relative;
+      border-radius: 2px;
+      flex: 0 0 auto;
+    }
+
+    .flow-inline-arrow::after {
+      content: "";
+      position: absolute;
+      right: -1px;
+      top: -3px;
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
+      border-left: 6px solid rgba(100, 116, 139, 0.55);
+    }
+
+    .demo-template-blank {
+      width: 100%;
+      min-height: 640px;
+      border: 1px solid var(--mr-border-secondary);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .case-showcase {
+      display: grid;
+      gap: 10px;
+    }
+
+    .case-card {
+      border-radius: 10px;
+      background: #fff;
+      border: 1px solid var(--mr-border-secondary);
+      padding: 11px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .case-title {
+      margin: 0;
+      font-size: 15px;
+      color: var(--mr-label-primary);
+      line-height: 1.4;
+      font-weight: 600;
+    }
+
+    .case-row {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 10px;
+    }
+
+    .case-row-no-media {
+      grid-template-columns: 1fr;
+    }
+
+    .case-detail {
+      margin: 0;
+      font-size: 13px;
+      color: var(--mr-label-secondary);
+      line-height: 1.68;
+      white-space: pre-wrap;
+    }
+
+    .case-media {
+      border-radius: 10px;
+      border: 1px solid var(--mr-border-secondary);
+      background: #f4f5f2;
+      min-height: 120px;
+      display: grid;
+      place-items: center;
+      color: var(--mr-label-tertiary);
+      font-size: 12px;
+      text-align: center;
+      padding: 6px;
+      overflow: hidden;
+    }
+
+    .case-media img {
+      width: 100%;
+      height: 100%;
+      max-height: none;
+      object-fit: cover;
+      display: block;
+    }
+
+    .case-link {
+      color: #2563eb;
+      font-size: 12px;
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(13, 14, 18, 0.82);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 99;
+      padding: 30px;
+    }
+
+    .lightbox.show {
+      display: flex;
+    }
+
+    .lightbox-image {
+      max-width: min(92vw, 1320px);
+      max-height: 86vh;
+      border-radius: 12px;
+      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.35);
+      object-fit: contain;
+      background: #fff;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      color: #fff;
+      font-size: 13px;
+      padding: 6px 12px;
+      cursor: pointer;
+    }
+
+    .template-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(13, 14, 18, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 120;
+      padding: 18px;
+    }
+
+    .template-modal.show {
+      display: flex;
+    }
+
+    .template-dialog {
+      width: min(760px, 96vw);
+      border-radius: 16px;
+      background: #fff;
+      border: 1px solid var(--mr-border-secondary);
+      box-shadow: var(--shadow-md);
+      padding: 16px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .template-head h3 {
+      margin: 0;
+      font-size: 19px;
+      color: var(--mr-label-primary);
+    }
+
+    .template-head p {
+      margin: 6px 0 0;
+      font-size: 13px;
+      color: var(--mr-label-secondary);
+    }
+
+    .template-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .template-card {
+      border: 1px solid var(--mr-border-primary);
+      border-radius: 12px;
+      background: #f9faf8;
+      padding: 12px;
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 150ms ease, transform 150ms ease, background-color 150ms ease;
+      display: grid;
+      gap: 6px;
+    }
+
+    .template-card:hover {
+      transform: translateY(-1px);
+      border-color: rgba(61, 61, 57, 0.36);
+      background: #fff;
+    }
+
+    .template-card strong {
+      font-size: 14px;
+      color: var(--mr-label-primary);
+    }
+
+    .template-card span {
+      font-size: 12px;
+      color: var(--mr-label-secondary);
+      line-height: 1.5;
+    }
+
+    .template-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 1120px) {
+      html,
+      body {
+        overflow: auto;
+      }
+
+      .app {
+        height: auto;
+        min-height: 100vh;
+        overflow: visible;
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        height: auto;
+        min-height: auto;
+      }
+
+      .main {
+        height: auto;
+        min-height: 75vh;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .grid,
+      .tools-grid,
+      .row,
+      .case-row {
+        grid-template-columns: 1fr;
+      }
+
+      .tool-detail {
+        grid-template-columns: 1fr;
+      }
+
+      .upload-head {
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .upload-actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
+
+      .stage {
+        padding: 10px;
+      }
+
+      .demo-frame {
+        height: 420px;
+      }
+
+      .flow-canvas {
+        min-height: 420px;
+      }
+
+      .template-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .flow-track {
+        min-width: 100%;
+        flex-direction: column;
+      }
+
+      .flow-node:not(:last-child)::after,
+      .flow-node:not(:last-child)::before {
+        display: none;
+      }
+    }
+  
+    /* readonly share: hide top edit/backup controls */
+    #topEditBtn,
+    #exportBackupBtn,
+    #importBackupBtn,
+    #importBackupInput {
+      display: none !important;
+    }
+
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>小红书笔记限流一键检测工具</h1>
-        
-        <div class="form-group">
-            <label for="publishTime">1. 笔记发布时长（小时）</label>
-            <input type="number" id="publishTime" placeholder="例如：24" min="0" required>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-row">
+          <h1 id="brandTitle">《大模型 Vibe Coding 可交互页面设计》</h1>
+          <button id="sidebarToggleBtn" class="btn btn-lite" type="button">折叠</button>
         </div>
+        <p id="brandDesc">左侧目录 + 右侧全屏舞台。点击编辑再修改，保存后专注展示。</p>
+      </div>
 
-        <div class="form-group">
-            <label for="viewCount">2. 总浏览量（小眼睛）</label>
-            <input type="number" id="viewCount" placeholder="例如：500" min="0" required>
+      <div id="dirList" class="dir-wrap"></div>
+
+      <div class="sidebar-foot">
+        <button id="editToggleBtn" class="btn btn-primary" type="button">添加新页面</button>
+
+        <div id="editorPanel" class="editor-panel">
+          <section class="editor-box">
+            <h3>目录编辑</h3>
+            <div style="font-size:11px;color:#64748b;line-height:1.5;">顶部点击「编辑」后，目录页签会变成可输入态，可直接修改每页标题和副标题。</div>
+            <button id="deletePageBtn" class="btn btn-warn" type="button">删除当前页</button>
+          </section>
+
+          <section class="editor-box">
+            <h3>页面结构样式</h3>
+            <button id="addLayoutStyleBtn" class="btn btn-lite" type="button">+ 新增结构样式</button>
+            <div id="layoutStyleList" class="list-editor"></div>
+          </section>
         </div>
+      </div>
+    </aside>
 
-        <div class="form-group">
-            <label for="recommendRatio">3. 推荐流量占比（%）</label>
-            <input type="number" id="recommendRatio" placeholder="例如：30" min="0" max="100" required>
+    <section class="main">
+      <header class="topbar">
+        <div class="stage-head">
+          <span id="stageTitle" class="top-title">演示内容</span>
         </div>
-
-        <div class="form-group">
-            <label for="interactCount">4. 点赞+收藏+评论总数</label>
-            <input type="number" id="interactCount" placeholder="例如：20" min="0" required>
+        <div class="top-actions">
+          <button id="topEditBtn" class="btn btn-primary" type="button">编辑</button>
+          <button id="exportBackupBtn" class="btn btn-lite" type="button">导出备份</button>
+          <button id="importBackupBtn" class="btn btn-lite" type="button">导入备份</button>
+          <input id="importBackupInput" type="file" accept="application/json,.json" style="display:none" />
+          <span id="saveStatus" class="save-status">未保存</span>
+          <span id="progressText" class="progress">1 / 9</span>
+          <button id="prevBtn" class="btn btn-lite" type="button">上一页</button>
+          <button id="nextBtn" class="btn btn-lite" type="button">下一页</button>
         </div>
+      </header>
 
-        <div class="form-group">
-            <label for="fanRatio">5. 粉丝观看占比（%）</label>
-            <input type="number" id="fanRatio" placeholder="例如：20" min="0" max="100" required>
-        </div>
+      <main id="slidesWrap" class="stage">
+        <article class="slide active" data-page-id="cover" data-page-type="base" data-nav-title="封面" data-nav-desc="课程总览">
+          <div class="hero">
+            <span class="badge">封面</span>
+            <h2 class="slide-main-title">零基础也能做出高级感交互网页</h2>
+            <p class="slide-main-subtitle">回到你更喜欢的版式：左侧目录固定，右侧舞台更大，线框减少，内容更聚焦。</p>
+            <div id="coverPoints" class="grid"></div>
+          </div>
+        </article>
 
-        <div class="form-group">
-            <label for="chipStatus">6. 能否投薯条</label>
-            <select id="chipStatus" required>
-                <option value="">请选择</option>
-                <option value="1">能</option>
-                <option value="0">不能</option>
-                <option value="2">没试过</option>
-            </select>
-        </div>
+        <article class="slide" data-page-id="goal" data-page-type="base" data-nav-title="核心目标" data-nav-desc="三大能力">
+          <div class="hero">
+            <span class="badge">第 1 步</span>
+            <h2 class="slide-main-title">明确目标：3 个核心能力</h2>
+            <p class="slide-main-subtitle">先定义“上传学习、自由编辑、交付输出”，后续所有内容都会更稳定。</p>
+            <div id="goalPoints" class="goal-points"></div>
+          </div>
+        </article>
 
-        <button onclick="checkLimit()">一键检测</button>
+        <article class="slide" data-page-id="material" data-page-type="base" data-nav-title="准备材料" data-nav-desc="小白清单">
+          <div class="hero">
+            <span class="badge">第 2 步</span>
+            <h2 class="slide-main-title">准备材料</h2>
+            <p class="slide-main-subtitle">先准备输入，再做生成。素材越完整，结果越可控。</p>
+            <div id="materialPoints" class="goal-points"></div>
+          </div>
+        </article>
 
-        <div id="resultBox" class="result"></div>
+        <article class="slide" data-page-id="tools" data-page-type="tools" data-nav-title="工具介绍" data-nav-desc="图文工具库">
+          <div class="hero">
+            <span class="badge">新增</span>
+            <h2 class="slide-main-title">工具介绍（图文展示）</h2>
+            <p class="slide-main-subtitle">默认包含 Gemini、OpenAI Codex、伏羲易生诸相，你可以继续增删改。</p>
+            <div class="tools-wrap">
+              <div id="toolShowcase" class="tools-grid"></div>
+              <div id="toolDetailPanel" class="tool-detail"></div>
+            </div>
+          </div>
+        </article>
 
-        <div class="tips">
-            <h3>数据获取说明</h3>
-            <p>1. 推荐流量占比/粉丝观看占比：我 → 创作中心 → 笔记数据 → 目标笔记</p>
-            <p>2. 薯条权限：笔记右下角「…」→ 薯条推广，查看是否可投</p>
-            <p>3. 建议以发布24小时后的稳定数据为准</p>
-        </div>
+        <article class="slide compact-title" data-page-id="upload" data-page-type="upload" data-nav-title="上传Demo" data-nav-desc="Demo/Prompt切换">
+          <div class="hero">
+            <span class="badge">第 3 步</span>
+            <h2 class="slide-main-title">上传并展示你的交互 Demo</h2>
+            <p class="slide-main-subtitle">通过 Tab 在 Demo 展示与 Prompt 展示之间切换。</p>
+
+            <div class="upload-wrap">
+              <div class="upload-head">
+                <div class="upload-left">
+                  <div id="projectTabs" class="project-tabs"></div>
+                  <div class="tab-header">
+                    <button id="tabDemoBtn" class="tab-btn active" type="button">Demo 展示</button>
+                    <button id="tabPromptBtn" class="tab-btn" type="button">Prompt 展示</button>
+                  </div>
+                </div>
+                <div id="demoTopActions" class="upload-actions">
+                  <input id="demoFile" type="file" accept=".html,text/html" />
+                  <button id="showDemoBtn" class="btn btn-primary" type="button">展示 Demo</button>
+                </div>
+                <div id="promptTopActions" class="upload-actions">
+                  <button id="renderPromptBtn" class="btn btn-primary" type="button">Markdown 展示</button>
+                  <button id="clearPromptBtn" class="btn btn-lite" type="button">清空</button>
+                </div>
+              </div>
+
+              <div id="tabDemoPanel" class="tab-panel active">
+                <iframe id="demoFrame" class="demo-frame" title="上传Demo展示区"></iframe>
+              </div>
+
+              <div id="tabPromptPanel" class="tab-panel">
+                <div id="promptRoundTabs" class="round-tabs"></div>
+                <textarea id="promptInput" class="prompt-input" placeholder="在这里粘贴完整 Prompt（支持 Markdown）"></textarea>
+                <div id="promptPreview" class="prompt-preview">这里展示 Prompt 的 Markdown 渲染结果。</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="slide" data-page-id="flow" data-page-type="flow" data-nav-title="流程图" data-nav-desc="第6页流程展示">
+          <div class="hero">
+            <span class="badge">第 4 步</span>
+            <h2 class="slide-main-title">从构思到上线的流程图</h2>
+            <p class="slide-main-subtitle">流程图形式展示，支持展开/收起步骤内容。</p>
+            <div class="flow-wrap">
+              <div id="flowCanvas" class="flow-canvas"></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="slide" data-page-id="cases" data-page-type="cases" data-nav-title="关键案例" data-nav-desc="第7页案例展示">
+          <div class="hero">
+            <span class="badge">第 5 步</span>
+            <h2 class="slide-main-title">核心关键点案例</h2>
+            <p class="slide-main-subtitle">案例结构：第一行标题；第二行补充内容 + 图文展示。</p>
+            <div class="cases-wrap">
+              <div id="caseShowcase" class="case-showcase"></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="slide" data-page-id="delivery" data-page-type="base" data-nav-title="交付成果" data-nav-desc="研发视觉协同">
+          <div class="hero">
+            <span class="badge">第 6 步</span>
+            <h2 class="slide-main-title">交付成果</h2>
+            <p class="slide-main-subtitle">交付可运行 Demo + 交互逻辑说明 + 前端代码，帮助产品研发视觉统一认知。</p>
+            <div class="delivery-wrap">
+              <div id="deliveryPoints" class="goal-points"></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="slide" data-page-id="faq" data-page-type="base" data-nav-title="常见问题" data-nav-desc="答疑与建议">
+          <div class="hero">
+            <span class="badge">第 7 步</span>
+            <h2 class="slide-main-title">常见问题与建议</h2>
+            <p class="slide-main-subtitle">结尾页用于答疑，帮同学快速进入实操。</p>
+            <div id="faqPoints" class="goal-points"></div>
+          </div>
+        </article>
+      </main>
+
+    </section>
+  </div>
+
+  <div id="imageLightbox" class="lightbox">
+    <button id="lightboxClose" class="lightbox-close" type="button">关闭</button>
+    <img id="lightboxImage" class="lightbox-image" alt="全屏图片预览" />
+  </div>
+
+  <div id="templateModal" class="template-modal">
+    <div class="template-dialog">
+      <div class="template-head">
+        <h3>添加新页面</h3>
+        <p>请选择页面结构模板</p>
+      </div>
+      <div class="template-grid">
+        <button class="template-card" type="button" data-template-type="flow">
+          <strong>流程图</strong>
+          <span>用于展示步骤、节点和执行路径</span>
+        </button>
+        <button class="template-card" type="button" data-template-type="demo">
+          <strong>Demo 演示</strong>
+          <span>用于展示项目 Demo 与 Prompt 内容</span>
+        </button>
+        <button class="template-card" type="button" data-template-type="rich">
+          <strong>图文展示</strong>
+          <span>适合文字说明、图片、链接混合展示</span>
+        </button>
+        <button class="template-card" type="button" data-template-type="tools">
+          <strong>工具介绍</strong>
+          <span>用于工具对比和图文讲解</span>
+        </button>
+      </div>
+      <div class="template-actions">
+        <button id="templateCancelBtn" class="btn btn-lite" type="button">取消</button>
+      </div>
     </div>
+  </div>
 
-    <script>
-        function checkLimit() {
-            // 获取输入数据
-            const publishTime = parseFloat(document.getElementById('publishTime').value);
-            const viewCount = parseFloat(document.getElementById('viewCount').value);
-            const recommendRatio = parseFloat(document.getElementById('recommendRatio').value);
-            const interactCount = parseFloat(document.getElementById('interactCount').value);
-            const fanRatio = parseFloat(document.getElementById('fanRatio').value);
-            const chipStatus = document.getElementById('chipStatus').value;
+  <script>
+    const STORAGE_KEY_BASE = "vibe_tutorial_ppt_state_v1";
+    const STORAGE_SCOPE = `${location.protocol}//${location.host}${location.pathname}`;
+    const STORAGE_KEY = `${STORAGE_KEY_BASE}::${STORAGE_SCOPE}`;
+    const STORAGE_LAST_GOOD_KEY = `${STORAGE_KEY}::last_good`;
+    const STORAGE_SNAPSHOT_INDEX_KEY = `${STORAGE_KEY}::snapshot_index`;
+    const STORAGE_SNAPSHOT_PREFIX = `${STORAGE_KEY}::snapshot::`;
+    const IDB_DB_NAME = "vibe_tutorial_ppt_state_db_v1";
+    const IDB_STORE_NAME = "kv";
+    const IDB_MAX_SNAPSHOTS = 20;
+    const DEFAULT_PAGE_IDS = ["cover", "goal", "material", "tools", "upload", "flow", "cases", "delivery", "faq"];
 
-            // 计算互动率
-            const interactRate = viewCount === 0 ? 0 : (interactCount / viewCount) * 100;
-            
-            // 初始化结果
-            let resultType = "normal";
-            let resultTitle = "";
-            let resultDesc = "";
-            let fixTips = "";
-
-            // 核心判定逻辑
-            if (publishTime >= 24) {
-                // 24小时以上数据判定
-                if (viewCount < 500 || recommendRatio < 15 || fanRatio > 60 || chipStatus === "0") {
-                    if (chipStatus === "0" || (viewCount < 200 && recommendRatio < 10)) {
-                        // 明确限流
-                        resultType = "limit";
-                        resultTitle = "❌ 明确限流";
-                        resultDesc = `你的笔记存在明确限流特征：
-1. 24小时浏览量${viewCount}（正常应≥500）；
-2. 推荐流量占比${recommendRatio}%（正常应≥20%）；
-3. 粉丝观看占比${fanRatio}%（正常应≤40%）；
-4. 互动率${interactRate.toFixed(2)}%（正常应≥3%）；
-5. 薯条投放权限：${chipStatus === "1" ? "可投" : chipStatus === "0" ? "不可投" : "未测试"}。`;
-                        fixTips = "修复建议：\n1. 自查笔记是否含敏感词/硬广/非原创内容，删除违规部分后重新编辑发布；\n2. 若内容无违规，通过「帮助与客服→笔记申诉」申请恢复推荐；\n3. 暂停发布同类内容1-2天，避免账号持续被限制。";
-                    } else {
-                        // 疑似限流
-                        resultType = "suspect";
-                        resultTitle = "⚠️ 疑似限流";
-                        resultDesc = `你的笔记存在疑似限流特征：
-1. 24小时浏览量${viewCount}（略低于正常水平）；
-2. 推荐流量占比${recommendRatio}%（接近限流阈值）；
-3. 粉丝观看占比${fanRatio}%（偏高）；
-4. 互动率${interactRate.toFixed(2)}%（略低）。`;
-                        fixTips = "修复建议：\n1. 优化笔记封面/标题，提升自然点击率；\n2. 主动和评论区用户互动，提升互动率；\n3. 观察48小时，若流量仍无增长，可重新发布笔记。";
-                    }
-                } else {
-                    // 正常
-                    resultType = "normal";
-                    resultTitle = "✅ 正常";
-                    resultDesc = `你的笔记流量正常：
-1. 24小时浏览量${viewCount}（达标）；
-2. 推荐流量占比${recommendRatio}%（达标）；
-3. 粉丝观看占比${fanRatio}%（正常）；
-4. 互动率${interactRate.toFixed(2)}%（达标）。`;
-                    fixTips = "优化建议：\n1. 保持当前内容风格，持续输出优质内容；\n2. 可适当引导用户互动，进一步提升笔记热度；\n3. 关注笔记72小时数据变化，及时调整内容方向。";
-                }
-            } else {
-                // 24小时以内数据判定
-                if (viewCount < 200 || recommendRatio < 10 || chipStatus === "0") {
-                    resultType = "suspect";
-                    resultTitle = "⚠️ 疑似限流（数据未稳定）";
-                    resultDesc = `当前笔记发布时长仅${publishTime}小时，数据尚未稳定，但已出现疑似限流信号：
-1. 短时浏览量${viewCount}（偏低）；
-2. 推荐流量占比${recommendRatio}%（偏低）；
-3. 薯条投放权限：${chipStatus === "1" ? "可投" : chipStatus === "0" ? "不可投" : "未测试"}。`;
-                    fixTips = "建议：\n1. 等待24小时后再检测，数据更准确；\n2. 期间不要频繁修改笔记，避免触发二次审核；\n3. 若24小时后数据仍差，再按限流处理。";
-                } else {
-                    resultType = "normal";
-                    resultTitle = "✅ 暂未发现限流（数据未稳定）";
-                    resultDesc = `当前笔记发布时长${publishTime}小时，数据尚未稳定，但暂未发现限流信号：
-1. 短时浏览量${viewCount}（正常）；
-2. 推荐流量占比${recommendRatio}%（正常）。`;
-                    fixTips = "建议：\n1. 继续观察数据至24小时；\n2. 保持账号正常互动，避免违规操作。";
-                }
-            }
-
-            // 展示结果
-            const resultBox = document.getElementById('resultBox');
-            resultBox.className = `result ${resultType}`;
-            resultBox.innerHTML = `
-                <h2>${resultTitle}</h2>
-                <p>${resultDesc.replace(/\n/g, '<br>')}</p>
-                <h3>处理建议</h3>
-                <p>${fixTips.replace(/\n/g, '<br>')}</p>
-            `;
-            resultBox.style.display = "block";
-            
-            // 滚动到结果区域
-            resultBox.scrollIntoView({ behavior: 'smooth' });
+    const state = {
+      editMode: false,
+      sidebarCollapsed: false,
+      current: 0,
+      isDirty: false,
+      lastPersistAt: 0,
+      lastPersistFailed: false,
+      lastPersistError: "",
+      pages: [],
+      layoutStyles: [
+        { name: "全局布局", detail: "左侧目录导航 + 右侧演示内容舞台" },
+        { name: "页面骨架", detail: "顶栏（进度/翻页/编辑）+ 主内容 Hero 区块" },
+        { name: "内容模块", detail: "封面模块、目标条目、工具、流程、案例、交付、FAQ" },
+        { name: "交互规则", detail: "编辑态可改字段；保存后回到只读展示；图片支持全屏预览" }
+      ],
+      upload: {
+        tab: "demo",
+        activeProject: 0,
+        projects: [
+          {
+            name: "项目A",
+            file: null,
+            fileUrl: "",
+            fileName: "",
+            htmlContent: "",
+            rounds: [
+              { name: "第一轮", content: "" },
+              { name: "第二轮", content: "" },
+              { name: "第三轮", content: "" },
+              { name: "第四轮", content: "" }
+            ],
+            activeRound: 0
+          }
+        ],
+        prompt: ""
+      },
+      uploadTemplates: {},
+      sections: {
+        cover: [
+          {
+            title: "核心",
+            detail: "上传 Demo、Prompt 展示、流程图、案例讲解、交付说明。",
+            image: "",
+            imageWidth: 100,
+            imageHeight: 180,
+            link: ""
+          },
+          {
+            title: "展示方式",
+            detail: "默认演示，编辑时再展开配置面板，减少干扰。",
+            image: "",
+            imageWidth: 100,
+            imageHeight: 180,
+            link: ""
+          }
+        ],
+        goal: [
+          {
+            title: "上传 Demo 并自动识别页面风格。",
+            detail: "把已有的 HTML 交互页面上传进来，系统会学习配色、字体、间距、圆角、动画与交互规范。",
+            image: "",
+            link: "",
+            open: false
+          },
+          {
+            title: "自由编辑标题、副标题、模块、样式和交互。",
+            detail: "点击顶部“编辑”后，直接在演示舞台里改内容；保存后自动回到纯展示状态。",
+            image: "",
+            link: "",
+            open: false
+          },
+          {
+            title: "导出可运行页面，支持产品研发视觉协同交付。",
+            detail: "最终交付 HTML + CSS + JS，打开即可运行，并且方便团队继续二次迭代。",
+            image: "",
+            link: "",
+            open: false
+          }
+        ],
+        material: [
+          {
+            title: "历史交互 Demo（HTML 文件）",
+            detail: "准备你之前做过的网页 Demo，便于模型学习你的视觉与交互风格。",
+            image: "",
+            link: "",
+            open: false
+          },
+          {
+            title: "页面文案（标题/副标题/模块/按钮）",
+            detail: "先把文字内容整理好，后续修改会更快。",
+            image: "",
+            link: "",
+            open: false
+          },
+          {
+            title: "视觉偏好（主题色/布局/动效）",
+            detail: "明确风格偏好可以显著减少返工。",
+            image: "",
+            link: "",
+            open: false
+          }
+        ],
+        delivery: [
+          {
+            title: "交互 Demo",
+            detail: "让产品、研发、视觉快速熟悉业务路径和关键交互逻辑。",
+            image: "",
+            link: "",
+            open: false
+          },
+          {
+            title: "视觉与交互说明",
+            detail: "明确状态、层级、动效节奏，减少沟通偏差。",
+            image: "",
+            link: "",
+            open: false
+          },
+          {
+            title: "前端代码交付",
+            detail: "HTML + CSS + JS 可直接运行，并可继续扩展。",
+            image: "",
+            link: "",
+            open: false
+          }
+        ],
+        faq: [
+          {
+            title: "如果模型输出混乱了怎么办？",
+            detail: "先锁定页面规则（配色、字体、布局、组件状态），再补内容字段，避免一次性要求过多。",
+            image: "",
+            link: "",
+            open: false
+          },
+          {
+            title: "如何让网页变成线上版本？",
+            detail: "本地验证通过后，部署到 Vercel/Netlify 或公司静态服务器，并配置域名访问。",
+            image: "",
+            link: "",
+            open: false
+          },
+          {
+            title: "如何精细化修改局部交互？",
+            detail: "只改目标组件的选择器、状态和动效，不做全局联动修改。",
+            image: "",
+            link: "",
+            open: false
+          }
+        ]
+      },
+      tools: [
+        {
+          name: "Google Gemini",
+          subtitle: "适合快速构思与多轮问答，生成结构化草案。",
+          detail: "适合快速构思与多轮问答，生成结构化草案。",
+          link: "https://gemini.google.com",
+          coverImage: "",
+          detailImage: "",
+          coverWidth: 100,
+          coverHeight: 96,
+          detailWidth: 100,
+          detailHeight: 330,
+          coverPosX: 50,
+          coverPosY: 50,
+          detailPosX: 50,
+          detailPosY: 50
+        },
+        {
+          name: "OpenAI Codex",
+          subtitle: "适合把设计意图落成可运行代码，并做局部精修。",
+          detail: "适合把设计意图落成可运行代码，并做局部精修。",
+          link: "https://openai.com",
+          coverImage: "",
+          detailImage: "",
+          coverWidth: 100,
+          coverHeight: 96,
+          detailWidth: 100,
+          detailHeight: 330,
+          coverPosX: 50,
+          coverPosY: 50,
+          detailPosX: 50,
+          detailPosY: 50
+        },
+        {
+          name: "伏羲易生诸相",
+          subtitle: "适合中文语境内容组织，提升教程表达效率。",
+          detail: "适合中文语境内容组织，提升教程表达效率。",
+          link: "",
+          coverImage: "",
+          detailImage: "",
+          coverWidth: 100,
+          coverHeight: 96,
+          detailWidth: 100,
+          detailHeight: 330,
+          coverPosX: 50,
+          coverPosY: 50,
+          detailPosX: 50,
+          detailPosY: 50
         }
-    </script>
+      ],
+      activeToolIndex: 0,
+      flowSteps: [
+        { title: "构思", detail: "确定页面目标、受众、转化动作。", images: [], imageWidth: 100, imageHeight: 120, open: true },
+        { title: "写 Prompt", detail: "明确角色、目标、约束、输出格式。", images: [], imageWidth: 100, imageHeight: 120, open: true },
+        { title: "画草图", detail: "先做信息结构，再做视觉细化。", images: [], imageWidth: 100, imageHeight: 120, open: false },
+        { title: "Vibe Coding", detail: "按统一风格生成首版页面。", images: [], imageWidth: 100, imageHeight: 120, open: false },
+        { title: "微调页面", detail: "聚焦局部交互和视觉细节。", images: [], imageWidth: 100, imageHeight: 120, open: false }
+      ],
+      cases: [
+        {
+          title: "如果模型输出混乱了怎么办？",
+          detail: "先锁定页面规则（配色、字体、布局、组件状态），再补内容字段。",
+          image: "",
+          imageWidth: 100,
+          imageHeight: 180,
+          link: ""
+        },
+        {
+          title: "如何让网页变成线上版本？",
+          detail: "验证通过后部署到静态托管，并完成域名配置。",
+          image: "",
+          imageWidth: 100,
+          imageHeight: 180,
+          link: ""
+        },
+        {
+          title: "如何精细化修改局部交互？",
+          detail: "只改目标组件，避免全局联动造成副作用。",
+          image: "",
+          imageWidth: 100,
+          imageHeight: 180,
+          link: ""
+        }
+      ]
+    };
+
+    const els = {
+      appRoot: document.querySelector(".app"),
+      body: document.body,
+      brandTitle: document.getElementById("brandTitle"),
+      brandDesc: document.getElementById("brandDesc"),
+      dirList: document.getElementById("dirList"),
+      editToggleBtn: document.getElementById("editToggleBtn"),
+      sidebarToggleBtn: document.getElementById("sidebarToggleBtn"),
+      stageTitle: document.getElementById("stageTitle"),
+      topEditBtn: document.getElementById("topEditBtn"),
+      exportBackupBtn: document.getElementById("exportBackupBtn"),
+      importBackupBtn: document.getElementById("importBackupBtn"),
+      importBackupInput: document.getElementById("importBackupInput"),
+      saveStatus: document.getElementById("saveStatus"),
+      progressText: document.getElementById("progressText"),
+      prevBtn: document.getElementById("prevBtn"),
+      nextBtn: document.getElementById("nextBtn"),
+      slidesWrap: document.getElementById("slidesWrap"),
+
+      deletePageBtn: document.getElementById("deletePageBtn"),
+      addLayoutStyleBtn: document.getElementById("addLayoutStyleBtn"),
+      layoutStyleList: document.getElementById("layoutStyleList"),
+
+      coverPoints: document.getElementById("coverPoints"),
+      goalPoints: document.getElementById("goalPoints"),
+      materialPoints: document.getElementById("materialPoints"),
+      deliveryPoints: document.getElementById("deliveryPoints"),
+      faqPoints: document.getElementById("faqPoints"),
+
+      toolShowcase: document.getElementById("toolShowcase"),
+      toolDetailPanel: document.getElementById("toolDetailPanel"),
+
+      flowCanvas: document.getElementById("flowCanvas"),
+      caseShowcase: document.getElementById("caseShowcase"),
+
+      tabDemoBtn: document.getElementById("tabDemoBtn"),
+      tabPromptBtn: document.getElementById("tabPromptBtn"),
+      projectTabs: document.getElementById("projectTabs"),
+      tabDemoPanel: document.getElementById("tabDemoPanel"),
+      tabPromptPanel: document.getElementById("tabPromptPanel"),
+      demoTopActions: document.getElementById("demoTopActions"),
+      promptTopActions: document.getElementById("promptTopActions"),
+      demoFile: document.getElementById("demoFile"),
+      showDemoBtn: document.getElementById("showDemoBtn"),
+      demoFrame: document.getElementById("demoFrame"),
+
+      promptInput: document.getElementById("promptInput"),
+      promptRoundTabs: document.getElementById("promptRoundTabs"),
+      renderPromptBtn: document.getElementById("renderPromptBtn"),
+      clearPromptBtn: document.getElementById("clearPromptBtn"),
+      promptPreview: document.getElementById("promptPreview"),
+
+      imageLightbox: document.getElementById("imageLightbox"),
+      lightboxClose: document.getElementById("lightboxClose"),
+      lightboxImage: document.getElementById("lightboxImage"),
+      templateModal: document.getElementById("templateModal"),
+      templateCancelBtn: document.getElementById("templateCancelBtn")
+    };
+
+    function esc(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function createSectionItem(title = "新增条目") {
+      return { title, detail: "补充说明内容", image: "", imageWidth: 100, imageHeight: 220, link: "", open: false };
+    }
+
+    function createCoverItem(title = "新模块") {
+      return { title, detail: "补充封面模块说明", image: "", imageWidth: 100, imageHeight: 180, link: "" };
+    }
+
+    function createFlowStep(title = "新流程") {
+      return { title, detail: "补充流程说明", images: [], imageWidth: 100, imageHeight: 120, open: true };
+    }
+
+    function createCaseItem(title = "新案例标题") {
+      return { title, detail: "补充案例内容", image: "", imageWidth: 100, imageHeight: 180, link: "" };
+    }
+
+    function getSectionContainer(pageId) {
+      if (pageId === "goal") return els.goalPoints;
+      if (pageId === "material") return els.materialPoints;
+      if (pageId === "delivery") return els.deliveryPoints;
+      if (pageId === "faq") return els.faqPoints;
+      const page = state.pages.find((p) => p.id === pageId);
+      if (page && page.el) {
+        return page.el.querySelector(".goal-points");
+      }
+      return null;
+    }
+
+    function readFileAsDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function currentProject() {
+      return state.upload.projects[state.upload.activeProject];
+    }
+
+    function currentRound() {
+      const project = currentProject();
+      return project && project.rounds[project.activeRound];
+    }
+
+    function createUploadState() {
+      return {
+        tab: "demo",
+        activeProject: 0,
+        projects: [
+          {
+            name: "项目A",
+            file: null,
+            fileUrl: "",
+            fileName: "",
+            htmlContent: "",
+            rounds: [
+              { name: "第一轮", content: "" },
+              { name: "第二轮", content: "" },
+              { name: "第三轮", content: "" },
+              { name: "第四轮", content: "" }
+            ],
+            activeRound: 0
+          }
+        ],
+        prompt: ""
+      };
+    }
+
+    function ensureUploadTemplateState(pageId) {
+      if (!state.uploadTemplates[pageId]) {
+        state.uploadTemplates[pageId] = createUploadState();
+      }
+      return state.uploadTemplates[pageId];
+    }
+
+    function normalizeUploadState(raw) {
+      const base = createUploadState();
+      if (!raw || typeof raw !== "object") return base;
+      const projectsRaw = Array.isArray(raw.projects) && raw.projects.length ? raw.projects : base.projects;
+      const projects = projectsRaw.map((p, idx) => ({
+        name: p && p.name ? String(p.name) : `项目${idx + 1}`,
+        file: null,
+        fileUrl: "",
+        fileName: p && p.fileName ? String(p.fileName) : "",
+        htmlContent: p && p.htmlContent ? String(p.htmlContent) : "",
+        rounds: Array.isArray(p && p.rounds) && p.rounds.length
+          ? p.rounds.map((r, ridx) => ({
+              name: r && r.name ? String(r.name) : `第${ridx + 1}轮`,
+              content: r && r.content ? String(r.content) : ""
+            }))
+          : base.projects[0].rounds.map((r) => ({ ...r })),
+        activeRound: Math.max(0, Math.min(((p && Number(p.activeRound)) || 0), (Array.isArray(p && p.rounds) && p.rounds.length ? p.rounds.length : 4) - 1))
+      }));
+      return {
+        tab: raw.tab === "prompt" ? "prompt" : "demo",
+        activeProject: Math.max(0, Math.min(Number(raw.activeProject) || 0, projects.length - 1)),
+        projects,
+        prompt: raw.prompt ? String(raw.prompt) : ""
+      };
+    }
+
+    function sanitizeUploadState(raw) {
+      const upload = normalizeUploadState(raw);
+      return {
+        tab: upload.tab,
+        activeProject: upload.activeProject,
+        prompt: upload.prompt,
+        projects: upload.projects.map((p) => ({
+          name: p.name,
+          fileName: p.fileName || "",
+          htmlContent: p.htmlContent || "",
+          rounds: p.rounds.map((r) => ({ name: r.name, content: r.content || "" })),
+          activeRound: p.activeRound
+        }))
+      };
+    }
+
+    function getProjectFrameUrl(project) {
+      if (!project) return "";
+      if (project.fileUrl) return project.fileUrl;
+      if (project.htmlContent) {
+        project.fileUrl = URL.createObjectURL(new Blob([project.htmlContent], { type: "text/html" }));
+        return project.fileUrl;
+      }
+      return "";
+    }
+
+    function serializePages() {
+      return state.pages.map((p) => ({
+        id: p.id,
+        type: p.type,
+        navTitle: p.navTitle,
+        navDesc: p.navDesc,
+        title: p.title,
+        subtitle: p.subtitle,
+        templateType: p.el && p.el.dataset ? (p.el.dataset.pageTemplateType || "") : ""
+      }));
+    }
+
+    let idbPromise = null;
+    let persistInFlight = null;
+
+    function saveStatusHint(text) {
+      if (location.protocol === "file:") {
+        return `${text}（建议用 localhost 打开更稳定）`;
+      }
+      return text;
+    }
+
+    function setSaveStatus(type, text) {
+      if (!els.saveStatus) return;
+      els.saveStatus.className = `save-status ${type || ""}`.trim();
+      els.saveStatus.textContent = saveStatusHint(text || "未保存");
+    }
+
+    function formatTimestamp(ts) {
+      const d = new Date(ts);
+      const hh = String(d.getHours()).padStart(2, "0");
+      const mm = String(d.getMinutes()).padStart(2, "0");
+      const ss = String(d.getSeconds()).padStart(2, "0");
+      return `${hh}:${mm}:${ss}`;
+    }
+
+    function markDirty() {
+      state.isDirty = true;
+      if (!state.editMode) setSaveStatus("dirty", "有未保存修改");
+    }
+
+    function buildSnapshot() {
+      return {
+        version: 2,
+        savedAt: Date.now(),
+        brandTitle: els.brandTitle ? els.brandTitle.textContent.trim() : "",
+        brandDesc: els.brandDesc ? els.brandDesc.textContent.trim() : "",
+        current: state.current,
+        sidebarCollapsed: state.sidebarCollapsed,
+        layoutStyles: state.layoutStyles,
+        sections: state.sections,
+        tools: state.tools,
+        activeToolIndex: state.activeToolIndex,
+        flowSteps: state.flowSteps,
+        cases: state.cases,
+        pages: serializePages(),
+        upload: sanitizeUploadState(state.upload),
+        uploadTemplates: Object.fromEntries(Object.entries(state.uploadTemplates).map(([key, val]) => [key, sanitizeUploadState(val)]))
+      };
+    }
+
+    function safeParseSnapshot(raw) {
+      if (!raw || typeof raw !== "string") return null;
+      try {
+        const parsed = JSON.parse(raw);
+        return parsed && typeof parsed === "object" ? parsed : null;
+      } catch (err) {
+        return null;
+      }
+    }
+
+    function openStateDb() {
+      if (!("indexedDB" in window)) return Promise.resolve(null);
+      if (idbPromise) return idbPromise;
+      idbPromise = new Promise((resolve) => {
+        try {
+          const req = indexedDB.open(IDB_DB_NAME, 1);
+          req.onupgradeneeded = () => {
+            const db = req.result;
+            if (!db.objectStoreNames.contains(IDB_STORE_NAME)) {
+              db.createObjectStore(IDB_STORE_NAME);
+            }
+          };
+          req.onsuccess = () => resolve(req.result);
+          req.onerror = () => resolve(null);
+        } catch (err) {
+          resolve(null);
+        }
+      });
+      return idbPromise;
+    }
+
+    async function idbSet(key, value) {
+      const db = await openStateDb();
+      if (!db) throw new Error("IndexedDB 不可用");
+      await new Promise((resolve, reject) => {
+        const tx = db.transaction(IDB_STORE_NAME, "readwrite");
+        tx.objectStore(IDB_STORE_NAME).put(value, key);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error || new Error("IndexedDB 写入失败"));
+      });
+    }
+
+    async function idbGet(key) {
+      const db = await openStateDb();
+      if (!db) return null;
+      return new Promise((resolve) => {
+        const tx = db.transaction(IDB_STORE_NAME, "readonly");
+        const req = tx.objectStore(IDB_STORE_NAME).get(key);
+        req.onsuccess = () => resolve(req.result || null);
+        req.onerror = () => resolve(null);
+      });
+    }
+
+    async function idbRemove(key) {
+      const db = await openStateDb();
+      if (!db) return;
+      await new Promise((resolve) => {
+        const tx = db.transaction(IDB_STORE_NAME, "readwrite");
+        tx.objectStore(IDB_STORE_NAME).delete(key);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => resolve();
+      });
+    }
+
+    async function appendSnapshotToIndexedDb(snapshotRaw) {
+      const stamp = Date.now();
+      const key = `${STORAGE_SNAPSHOT_PREFIX}${stamp}`;
+      await idbSet(key, snapshotRaw);
+      const rawIndex = await idbGet(STORAGE_SNAPSHOT_INDEX_KEY);
+      let index = [];
+      try {
+        index = Array.isArray(rawIndex) ? rawIndex : JSON.parse(rawIndex || "[]");
+      } catch (err) {
+        index = [];
+      }
+      index.push({ key, ts: stamp });
+      while (index.length > IDB_MAX_SNAPSHOTS) {
+        const removed = index.shift();
+        if (removed && removed.key) await idbRemove(removed.key);
+      }
+      await idbSet(STORAGE_SNAPSHOT_INDEX_KEY, JSON.stringify(index));
+    }
+
+    function exportSnapshotFile(raw) {
+      const stamp = new Date();
+      const y = stamp.getFullYear();
+      const m = String(stamp.getMonth() + 1).padStart(2, "0");
+      const d = String(stamp.getDate()).padStart(2, "0");
+      const hh = String(stamp.getHours()).padStart(2, "0");
+      const mm = String(stamp.getMinutes()).padStart(2, "0");
+      const ss = String(stamp.getSeconds()).padStart(2, "0");
+      const fileName = `vibe-tutorial-backup-${y}${m}${d}-${hh}${mm}${ss}.json`;
+      const url = URL.createObjectURL(new Blob([raw], { type: "application/json;charset=utf-8" }));
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    async function persistStateNow() {
+      const snapshot = buildSnapshot();
+      const raw = JSON.stringify(snapshot);
+      setSaveStatus("saving", "保存中...");
+      let localOk = false;
+      try {
+        localStorage.setItem(STORAGE_KEY, raw);
+        localStorage.setItem(STORAGE_LAST_GOOD_KEY, raw);
+        localStorage.setItem(STORAGE_KEY_BASE, raw);
+        localOk = true;
+      } catch (err) {
+        state.lastPersistFailed = true;
+        state.lastPersistError = err && err.message ? err.message : "本地存储写入失败";
+      }
+
+      try {
+        await idbSet(STORAGE_KEY, raw);
+        await idbSet(STORAGE_LAST_GOOD_KEY, raw);
+        await idbSet(STORAGE_KEY_BASE, raw);
+        await appendSnapshotToIndexedDb(raw);
+        state.lastPersistAt = Number(snapshot.savedAt) || Date.now();
+        state.lastPersistFailed = false;
+        state.lastPersistError = "";
+        state.isDirty = false;
+        setSaveStatus("saved", `已保存 ${formatTimestamp(state.lastPersistAt)}`);
+      } catch (err) {
+        if (!localOk) {
+          state.lastPersistFailed = true;
+          state.lastPersistError = err && err.message ? err.message : "IndexedDB 写入失败";
+          setSaveStatus("error", "保存失败，请导出备份后重试");
+          throw err;
+        }
+        state.lastPersistAt = Number(snapshot.savedAt) || Date.now();
+        state.lastPersistFailed = false;
+        state.lastPersistError = "";
+        state.isDirty = false;
+        setSaveStatus("warn", `已保存(降级) ${formatTimestamp(state.lastPersistAt)}`);
+      }
+      return true;
+    }
+
+    function persistState() {
+      persistInFlight = persistStateNow().catch(() => false).finally(() => {
+        persistInFlight = null;
+      });
+      return persistInFlight;
+    }
+
+    function startAutoSave() {
+      window.setInterval(() => {
+        if (!state.pages.length || !state.isDirty) return;
+        persistState();
+      }, 1200);
+      window.addEventListener("beforeunload", (e) => {
+        if (state.isDirty) persistState();
+        if (state.isDirty || state.lastPersistFailed || Boolean(persistInFlight)) {
+          e.preventDefault();
+          e.returnValue = "";
+        }
+      });
+    }
+
+    function normalizeStateData() {
+      refreshLayoutStructureSummary();
+
+      const sectionIds = ["goal", "material", "delivery", "faq"];
+      sectionIds.forEach((id) => {
+        const list = state.sections[id] || [];
+        list.forEach((item) => {
+          if (typeof item.imageWidth === "undefined") item.imageWidth = 100;
+          if (typeof item.imageHeight === "undefined") item.imageHeight = 220;
+        });
+      });
+      (state.sections.cover || []).forEach((item) => {
+        if (typeof item.imageWidth === "undefined") item.imageWidth = 100;
+        if (typeof item.imageHeight === "undefined") item.imageHeight = 180;
+      });
+      state.flowSteps = (state.flowSteps || []).map((step) => ({
+        ...step,
+        images: Array.isArray(step.images) ? step.images : [],
+        imageWidth: typeof step.imageWidth === "undefined" ? 100 : step.imageWidth,
+        imageHeight: typeof step.imageHeight === "undefined" ? 120 : step.imageHeight
+      }));
+      state.cases = (state.cases || []).map((c) => ({
+        ...c,
+        imageWidth: typeof c.imageWidth === "undefined" ? 100 : c.imageWidth,
+        imageHeight: typeof c.imageHeight === "undefined" ? 180 : c.imageHeight
+      }));
+      state.tools = (state.tools || []).map((t) => {
+        const subtitle = typeof t.subtitle === "string" ? t.subtitle : (typeof t.desc === "string" ? t.desc : "");
+        const detail = typeof t.detail === "string" ? t.detail : subtitle;
+        const coverPosX = Math.max(0, Math.min(100, Number(t.coverPosX)));
+        const coverPosY = Math.max(0, Math.min(100, Number(t.coverPosY)));
+        const detailPosX = Math.max(0, Math.min(100, Number(t.detailPosX)));
+        const detailPosY = Math.max(0, Math.min(100, Number(t.detailPosY)));
+        return {
+          ...t,
+          subtitle,
+          detail,
+          coverPosX: Number.isFinite(coverPosX) ? coverPosX : 50,
+          coverPosY: Number.isFinite(coverPosY) ? coverPosY : 50,
+          detailPosX: Number.isFinite(detailPosX) ? detailPosX : 50,
+          detailPosY: Number.isFinite(detailPosY) ? detailPosY : 50
+        };
+      });
+    }
+
+    function refreshLayoutStructureSummary() {
+      const navSummary = (state.pages || []).map((p, idx) => `${idx + 1}. ${p.navTitle}`).join(" / ");
+      const summary = navSummary || "暂无目录结构";
+      const idx = state.layoutStyles.findIndex((item) => item.name === "页面目录结构");
+      if (idx === -1) {
+        state.layoutStyles.unshift({ name: "页面目录结构", detail: summary });
+      } else {
+        state.layoutStyles[idx].detail = summary;
+      }
+    }
+
+    function imageSizeStyle(entity, wKey = "imageWidth", hKey = "imageHeight", defaultH = 220) {
+      const width = Math.max(10, Math.min(100, Number(entity[wKey]) || 100));
+      const height = Math.max(60, Math.min(1200, Number(entity[hKey]) || defaultH));
+      return `width:${width}%;height:${height}px;`;
+    }
+
+    function applyImageSizeToNodeList(nodes, width, height) {
+      nodes.forEach((img) => {
+        img.style.width = `${width}%`;
+        img.style.height = `${height}px`;
+        img.style.objectFit = "cover";
+      });
+    }
+
+    function liveUpdateToolImageSize() {
+      const tool = state.tools[state.activeToolIndex];
+      if (!tool) return;
+      const coverWidth = Math.max(10, Math.min(100, Number(tool.coverWidth) || 100));
+      const coverHeight = Math.max(60, Math.min(500, Number(tool.coverHeight) || 96));
+      const detailWidth = Math.max(10, Math.min(100, Number(tool.detailWidth) || 100));
+      const detailHeight = Math.max(80, Math.min(900, Number(tool.detailHeight) || 330));
+      const coverPosX = Math.max(0, Math.min(100, Number(tool.coverPosX)));
+      const coverPosY = Math.max(0, Math.min(100, Number(tool.coverPosY)));
+      const detailPosX = Math.max(0, Math.min(100, Number(tool.detailPosX)));
+      const detailPosY = Math.max(0, Math.min(100, Number(tool.detailPosY)));
+
+      document.querySelectorAll(".tool-switch-btn.active .tool-image").forEach((box) => {
+        box.style.height = `${coverHeight}px`;
+        const img = box.querySelector("img");
+        if (img) {
+          img.style.width = `${coverWidth}%`;
+          img.style.height = "100%";
+          img.style.objectFit = "cover";
+          img.style.objectPosition = `${Number.isFinite(coverPosX) ? coverPosX : 50}% ${Number.isFinite(coverPosY) ? coverPosY : 50}%`;
+        }
+      });
+
+      document.querySelectorAll(".tool-detail-media img").forEach((img) => {
+        img.style.width = `${detailWidth}%`;
+        img.style.height = `${detailHeight}px`;
+        img.style.objectFit = "cover";
+        img.style.objectPosition = `${Number.isFinite(detailPosX) ? detailPosX : 50}% ${Number.isFinite(detailPosY) ? detailPosY : 50}%`;
+      });
+    }
+
+    function refreshStageTitle() {
+      if (!els.stageTitle) return;
+      const brand = (els.brandTitle && els.brandTitle.textContent.trim()) || "演示内容";
+      els.stageTitle.textContent = state.sidebarCollapsed ? brand : "演示内容";
+    }
+
+    function applySidebarCollapsed() {
+      els.appRoot.classList.toggle("sidebar-collapsed", state.sidebarCollapsed);
+      els.sidebarToggleBtn.textContent = state.sidebarCollapsed ? "展开" : "折叠";
+      refreshStageTitle();
+      renderDirList();
+    }
+
+    function renderLayoutStylesEditor() {
+      els.layoutStyleList.innerHTML = "";
+      if (!state.layoutStyles.length) {
+        els.layoutStyleList.innerHTML = '<div style="font-size:11px;color:#64748b;">暂时没有结构样式条目。</div>';
+        return;
+      }
+      state.layoutStyles.forEach((item, idx) => {
+        const node = document.createElement("div");
+        node.className = "list-item";
+        node.innerHTML = `
+          <div class="head">
+            <span>样式 ${idx + 1}</span>
+            <div class="goal-actions">
+              <button class="btn btn-lite" type="button" data-layout-act="up" data-layout-index="${idx}">上移</button>
+              <button class="btn btn-lite" type="button" data-layout-act="down" data-layout-index="${idx}">下移</button>
+              <button class="btn btn-warn" type="button" data-layout-act="del" data-layout-index="${idx}">删</button>
+            </div>
+          </div>
+          <input data-layout-index="${idx}" data-layout-field="name" value="${esc(item.name)}" placeholder="结构标题" />
+          <textarea data-layout-index="${idx}" data-layout-field="detail" placeholder="结构说明">${esc(item.detail)}</textarea>
+        `;
+        els.layoutStyleList.appendChild(node);
+      });
+    }
+
+    function initPagesFromDom() {
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      state.pages = slides.map((el, idx) => {
+        const titleEl = el.querySelector(".slide-main-title");
+        const subtitleEl = el.querySelector(".slide-main-subtitle");
+        if (titleEl) titleEl.classList.add("inline-editable");
+        if (subtitleEl) subtitleEl.classList.add("inline-editable");
+        return {
+          id: el.dataset.pageId || `page-${idx}`,
+          type: el.dataset.pageType || "base",
+          navTitle: el.dataset.navTitle || `第${idx + 1}页`,
+          navDesc: el.dataset.navDesc || "页面说明",
+          title: titleEl ? titleEl.textContent.trim() : `页面${idx + 1}`,
+          subtitle: subtitleEl ? subtitleEl.textContent.trim() : "",
+          el,
+          titleEl,
+          subtitleEl
+        };
+      });
+    }
+
+    function currentPage() {
+      return state.pages[state.current];
+    }
+
+    function syncInlineEditable() {
+      state.pages.forEach((p, idx) => {
+        const canEdit = state.editMode && idx === state.current;
+        if (p.titleEl) p.titleEl.contentEditable = canEdit ? "true" : "false";
+        if (p.subtitleEl) p.subtitleEl.contentEditable = canEdit ? "true" : "false";
+      });
+    }
+
+    function setEditMode(open) {
+      if (!open) {
+        state.pages.forEach((p) => {
+          if (p.titleEl) {
+            p.title = p.titleEl.textContent.trim();
+            p.titleEl.textContent = p.title;
+          }
+          if (p.subtitleEl) {
+            p.subtitle = p.subtitleEl.textContent.trim();
+            p.subtitleEl.textContent = p.subtitle;
+          }
+        });
+        if (els.brandTitle) {
+          els.brandTitle.textContent = els.brandTitle.textContent.trim() || "《大模型 Vibe Coding 可交互页面设计》";
+        }
+        if (els.brandDesc) {
+          els.brandDesc.textContent = els.brandDesc.textContent.trim() || "左侧目录 + 右侧全屏舞台。点击编辑再修改，保存后专注展示。";
+        }
+      }
+      state.editMode = open;
+      els.body.classList.toggle("edit-mode", open);
+      els.topEditBtn.textContent = open ? "保存" : "编辑";
+      if (els.brandTitle) els.brandTitle.contentEditable = open ? "true" : "false";
+      if (els.brandDesc) els.brandDesc.contentEditable = open ? "true" : "false";
+      els.editToggleBtn.disabled = open;
+      if (open) closeTemplateModal();
+      syncInlineEditable();
+      refreshStageTitle();
+      renderDirList();
+      renderAllDynamic();
+      if (!open) persistState();
+    }
+
+    function updateSlidesVisibility() {
+      state.pages.forEach((p, idx) => p.el.classList.toggle("active", idx === state.current));
+      els.progressText.textContent = `${state.current + 1} / ${state.pages.length}`;
+      els.prevBtn.disabled = state.current === 0;
+      els.nextBtn.disabled = state.current === state.pages.length - 1;
+      syncInlineEditable();
+    }
+
+    function renderDirList() {
+      refreshLayoutStructureSummary();
+      els.dirList.innerHTML = "";
+      state.pages.forEach((p, idx) => {
+        const item = document.createElement("div");
+        item.className = `dir-item ${idx === state.current ? "active" : ""}`;
+        item.draggable = true;
+        item.dataset.dirIndex = String(idx);
+        if (state.sidebarCollapsed) {
+          item.innerHTML = `<strong>${idx + 1}</strong>`;
+        } else if (state.editMode) {
+          item.innerHTML = `
+            <strong>${idx + 1}.</strong>
+            <div class="dir-edit-row">
+              <input class="dir-edit-title" data-dir-index="${idx}" data-dir-field="title" value="${esc(p.navTitle)}" placeholder="目录标题" />
+              <textarea class="dir-edit-desc" data-dir-index="${idx}" data-dir-field="desc" placeholder="目录副标题">${esc(p.navDesc)}</textarea>
+            </div>
+          `;
+        } else {
+          item.innerHTML = `<strong>${idx + 1}. <span class="dir-text">${esc(p.navTitle)}</span></strong><p>${esc(p.navDesc)}</p>`;
+        }
+        item.addEventListener("click", (e) => {
+          if (e.target.closest("input,textarea")) return;
+          go(idx);
+        });
+        els.dirList.appendChild(item);
+      });
+    }
+
+    function go(index) {
+      state.current = Math.max(0, Math.min(state.pages.length - 1, index));
+      updateSlidesVisibility();
+      renderDirList();
+      renderAllDynamic();
+      persistState();
+    }
+
+    function renderSection(pageId, container) {
+      if (!container) return;
+      const items = state.sections[pageId] || [];
+      const toolbar = state.editMode
+        ? `<div class="stage-toolbar"><button class="btn btn-lite" type="button" data-section-page="${pageId}" data-section-act="add">+ 新增条目</button></div>`
+        : "";
+      const cards = items.map((item, idx) => {
+        const open = state.editMode || item.open;
+        const title = state.editMode
+          ? `<input class="stage-field" data-section-page="${pageId}" data-section-index="${idx}" data-section-field="title" value="${esc(item.title)}" />`
+          : `<div class="goal-item-title">${esc(item.title)}</div>`;
+        const detail = state.editMode
+          ? `<textarea class="stage-textarea" data-section-page="${pageId}" data-section-index="${idx}" data-section-field="detail">${esc(item.detail)}</textarea>`
+          : `<div>${esc(item.detail)}</div>`;
+        const link = state.editMode
+          ? `<input class="stage-field" data-section-page="${pageId}" data-section-index="${idx}" data-section-field="link" placeholder="链接（可选）" value="${esc(item.link || "")}" />`
+          : (item.link ? `<a class="goal-link" href="${esc(item.link)}" target="_blank">${esc(item.link)}</a>` : "");
+        const mediaStyle = imageSizeStyle(item, "imageWidth", "imageHeight", 220);
+        const mediaBlock = item.image ? `<div class="goal-media"><img src="${esc(item.image)}" data-view-image="1" style="${mediaStyle}" alt="内容图片" /></div>` : "";
+        const imageSizeControls = state.editMode ? `
+          <div class="image-size-row">
+            <input class="stage-field" type="number" min="10" max="100" data-section-page="${pageId}" data-section-index="${idx}" data-section-field="imageWidth" value="${esc(item.imageWidth || 100)}" placeholder="宽度(%)" />
+            <input class="stage-field" type="number" min="60" max="1200" data-section-page="${pageId}" data-section-index="${idx}" data-section-field="imageHeight" value="${esc(item.imageHeight || 220)}" placeholder="高度(px)" />
+          </div>
+        ` : "";
+        const uploadControl = state.editMode
+          ? `<label class="file-upload">上传图片<input type="file" accept="image/*" data-section-page="${pageId}" data-section-index="${idx}" data-section-field="image" /></label>`
+          : "";
+        const editActions = state.editMode ? `
+          <button class="btn btn-lite" type="button" data-section-page="${pageId}" data-section-index="${idx}" data-section-act="up">上移</button>
+          <button class="btn btn-lite" type="button" data-section-page="${pageId}" data-section-index="${idx}" data-section-act="down">下移</button>
+          <button class="btn btn-warn" type="button" data-section-page="${pageId}" data-section-index="${idx}" data-section-act="del">删</button>
+        ` : "";
+        return `
+          <div class="goal-item">
+            <div class="goal-item-head">
+              ${title}
+              <div class="goal-actions">
+                <button class="goal-toggle" type="button" data-section-page="${pageId}" data-section-index="${idx}" data-section-act="toggle">${open ? "收起" : "展开"}</button>
+                ${editActions}
+              </div>
+            </div>
+            <div class="goal-item-body ${open ? "open" : ""}">
+              ${detail}
+              ${link}
+              ${mediaBlock}
+              ${imageSizeControls}
+              ${uploadControl}
+            </div>
+          </div>
+        `;
+      }).join("");
+      container.innerHTML = `${toolbar}${cards}`;
+    }
+
+    function renderCoverCards() {
+      if (!els.coverPoints) return;
+      const items = state.sections.cover || [];
+      const toolbar = state.editMode
+        ? `<div class="stage-toolbar" style="grid-column:1 / -1;"><button class="btn btn-lite" type="button" data-cover-act="add">+ 新增封面模块</button></div>`
+        : "";
+      const cards = items.map((item, idx) => {
+        const title = state.editMode
+          ? `<input class="stage-field" data-cover-index="${idx}" data-cover-field="title" value="${esc(item.title)}" />`
+          : `<h3>${esc(item.title)}</h3>`;
+        const detail = state.editMode
+          ? `<textarea class="stage-textarea" data-cover-index="${idx}" data-cover-field="detail">${esc(item.detail)}</textarea>`
+          : `<p>${esc(item.detail)}</p>`;
+        const link = state.editMode
+          ? `<input class="stage-field" data-cover-index="${idx}" data-cover-field="link" value="${esc(item.link || "")}" placeholder="链接（可选）" />`
+          : (item.link ? `<a class="goal-link" href="${esc(item.link)}" target="_blank">${esc(item.link)}</a>` : "");
+        const imageStyle = imageSizeStyle(item, "imageWidth", "imageHeight", 180);
+        const image = item.image ? `<div class="goal-media"><img src="${esc(item.image)}" data-view-image="1" style="${imageStyle}" alt="封面模块图片" /></div>` : "";
+        const actions = state.editMode ? `
+          <div class="image-size-row">
+            <input class="stage-field" type="number" min="10" max="100" data-cover-index="${idx}" data-cover-field="imageWidth" value="${esc(item.imageWidth || 100)}" placeholder="宽度(%)" />
+            <input class="stage-field" type="number" min="60" max="1200" data-cover-index="${idx}" data-cover-field="imageHeight" value="${esc(item.imageHeight || 180)}" placeholder="高度(px)" />
+          </div>
+          <div class="stage-toolbar" style="justify-content:flex-start;margin-top:8px;">
+            <button class="btn btn-lite" type="button" data-cover-index="${idx}" data-cover-act="up">上移</button>
+            <button class="btn btn-lite" type="button" data-cover-index="${idx}" data-cover-act="down">下移</button>
+            <button class="btn btn-warn" type="button" data-cover-index="${idx}" data-cover-act="del">删</button>
+            <label class="file-upload">上传图片<input type="file" accept="image/*" data-cover-index="${idx}" data-cover-field="image" /></label>
+          </div>
+        ` : "";
+        return `<div class="card">${title}${detail}${link}${image}${actions}</div>`;
+      }).join("");
+      els.coverPoints.innerHTML = `${toolbar}${cards}`;
+    }
+
+    function renderToolsPanel(showcaseEl, detailEl, pageId = "tools") {
+      if (!showcaseEl || !detailEl) return;
+      if (!state.tools.length) {
+        state.tools.push({ name: "新工具", subtitle: "填写工具副标题", detail: "填写工具正文介绍", link: "", coverImage: "", detailImage: "", coverWidth: 100, coverHeight: 96, detailWidth: 100, detailHeight: 330, coverPosX: 50, coverPosY: 50, detailPosX: 50, detailPosY: 50 });
+      }
+      if (state.activeToolIndex >= state.tools.length) state.activeToolIndex = state.tools.length - 1;
+      if (state.activeToolIndex < 0) state.activeToolIndex = 0;
+
+      showcaseEl.innerHTML = state.tools.map((t, idx) => {
+        const coverWidth = Math.max(10, Math.min(100, Number(t.coverWidth) || 100));
+        const coverHeight = Math.max(60, Math.min(500, Number(t.coverHeight) || 96));
+        const coverPosX = Math.max(0, Math.min(100, Number(t.coverPosX)));
+        const coverPosY = Math.max(0, Math.min(100, Number(t.coverPosY)));
+        const dragAttrs = state.editMode && idx === state.activeToolIndex ? `data-tool-drag="cover" data-tool-index="${idx}"` : "";
+        const image = t.coverImage ? `<img src="${esc(t.coverImage)}" ${dragAttrs} style="width:${coverWidth}%;height:100%;object-fit:cover;object-position:${Number.isFinite(coverPosX) ? coverPosX : 50}% ${Number.isFinite(coverPosY) ? coverPosY : 50}%;" alt="${esc(t.name)}" />` : `<span>${esc(t.name)}</span>`;
+        return `
+          <button class="tool-switch-btn ${idx === state.activeToolIndex ? "active" : ""}" type="button" data-tool-switch="${idx}" data-tool-page="${pageId}">
+            <div class="tool-card">
+              <div class="tool-image" style="height:${coverHeight}px;">${image}</div>
+              <div class="tool-body"><h4>${esc(t.name)}</h4><p>${esc(t.subtitle || "")}</p></div>
+            </div>
+          </button>
+        `;
+      }).join("");
+
+      const tool = state.tools[state.activeToolIndex];
+      if (!tool) return;
+      const detailWidth = Math.max(10, Math.min(100, Number(tool.detailWidth) || 100));
+      const detailHeight = Math.max(80, Math.min(900, Number(tool.detailHeight) || 330));
+      const detailPosX = Math.max(0, Math.min(100, Number(tool.detailPosX)));
+      const detailPosY = Math.max(0, Math.min(100, Number(tool.detailPosY)));
+      const media = tool.detailImage
+        ? `<img src="${esc(tool.detailImage)}" data-view-image="1" data-tool-drag="detail" data-tool-index="${state.activeToolIndex}" style="width:${detailWidth}%;height:${detailHeight}px;object-fit:cover;object-position:${Number.isFinite(detailPosX) ? detailPosX : 50}% ${Number.isFinite(detailPosY) ? detailPosY : 50}%;" alt="${esc(tool.name)}" />`
+        : "可上传展示图片";
+
+      if (state.editMode) {
+        detailEl.innerHTML = `
+          <div class="tool-detail-copy">
+            <input class="stage-field" data-tool-page="${pageId}" data-tool-field="name" value="${esc(tool.name)}" placeholder="工具名称" />
+            <textarea class="stage-textarea" data-tool-page="${pageId}" data-tool-field="subtitle" placeholder="工具副标题（卡片文案）">${esc(tool.subtitle || "")}</textarea>
+            <textarea class="stage-textarea" data-tool-page="${pageId}" data-tool-field="detail" placeholder="工具正文（下方详细介绍）">${esc(tool.detail || "")}</textarea>
+            <input class="stage-field" data-tool-page="${pageId}" data-tool-field="link" value="${esc(tool.link || "")}" placeholder="工具链接（可选）" />
+            <div class="stage-toolbar">
+              <button class="btn btn-lite" type="button" data-tool-page="${pageId}" data-tool-act="add">+ 新增工具</button>
+              <button class="btn btn-warn" type="button" data-tool-page="${pageId}" data-tool-act="del">删除当前</button>
+            </div>
+            <div class="image-size-row">
+              <input class="stage-field" type="number" min="10" max="100" data-tool-page="${pageId}" data-tool-field="coverWidth" value="${esc(tool.coverWidth || 100)}" placeholder="封面宽度(%)" />
+              <input class="stage-field" type="number" min="60" max="500" data-tool-page="${pageId}" data-tool-field="coverHeight" value="${esc(tool.coverHeight || 96)}" placeholder="封面高度(px)" />
+            </div>
+            <div class="image-size-row">
+              <input class="stage-field" type="number" min="10" max="100" data-tool-page="${pageId}" data-tool-field="detailWidth" value="${esc(tool.detailWidth || 100)}" placeholder="展示宽度(%)" />
+              <input class="stage-field" type="number" min="80" max="900" data-tool-page="${pageId}" data-tool-field="detailHeight" value="${esc(tool.detailHeight || 330)}" placeholder="展示高度(px)" />
+            </div>
+            <div class="stage-toolbar" style="justify-content:flex-start;">
+              <label class="file-upload">上传封面图<input type="file" accept="image/*" data-tool-page="${pageId}" data-tool-file="coverImage" /></label>
+              <label class="file-upload">上传展示图<input type="file" accept="image/*" data-tool-page="${pageId}" data-tool-file="detailImage" /></label>
+            </div>
+          </div>
+          <div class="tool-detail-media">${media}</div>
+        `;
+      } else {
+        const link = tool.link ? `<a href="${esc(tool.link)}" target="_blank">${esc(tool.link)}</a>` : "";
+        detailEl.innerHTML = `
+          <div class="tool-detail-copy">
+            <h4>${esc(tool.name)}</h4>
+            <p>${esc(tool.detail || "")}</p>
+            ${link}
+          </div>
+          <div class="tool-detail-media">${media}</div>
+        `;
+      }
+    }
+
+    function renderToolsShowcase() {
+      renderToolsPanel(els.toolShowcase, els.toolDetailPanel, "tools");
+      state.pages.forEach((p) => {
+        if (p.type !== "tools-copy") return;
+        const showcase = p.el.querySelector(`[data-tools-showcase="${p.id}"]`);
+        const detail = p.el.querySelector(`[data-tools-detail="${p.id}"]`);
+        renderToolsPanel(showcase, detail, p.id);
+      });
+    }
+
+    function renderFlowCanvas(target = els.flowCanvas) {
+      if (!target) return;
+      const toolbar = state.editMode
+        ? `<div class="stage-toolbar"><button class="btn btn-lite" type="button" data-flow-act="add">+ 新增流程模块</button></div>`
+        : "";
+      const cards = state.flowSteps.map((step, idx) => {
+        const open = state.editMode || step.open;
+        const title = state.editMode
+          ? `<input class="stage-field" data-flow-index="${idx}" data-flow-field="title" value="${esc(step.title)}" />`
+          : `<h4>${idx + 1}. ${esc(step.title)}</h4>`;
+        const body = state.editMode
+          ? `<textarea class="stage-textarea" data-flow-index="${idx}" data-flow-field="detail">${esc(step.detail)}</textarea>`
+          : `<p>${esc(step.detail)}</p>`;
+        const images = Array.isArray(step.images) ? step.images : [];
+        const imgWidth = Math.max(10, Math.min(100, Number(step.imageWidth) || 100));
+        const imgHeight = Math.max(60, Math.min(800, Number(step.imageHeight) || 120));
+        const gallery = images.length
+          ? `<div class="flow-gallery">${images.map((src) => `<img src="${esc(src)}" data-view-image="1" style="width:${imgWidth}%;height:${imgHeight}px;object-fit:cover;" alt="流程图片" />`).join("")}</div>`
+          : "";
+        const actions = state.editMode ? `
+          <div class="image-size-row">
+            <input class="stage-field" type="number" min="10" max="100" data-flow-index="${idx}" data-flow-field="imageWidth" value="${esc(step.imageWidth || 100)}" placeholder="图片宽度(%)" />
+            <input class="stage-field" type="number" min="60" max="800" data-flow-index="${idx}" data-flow-field="imageHeight" value="${esc(step.imageHeight || 120)}" placeholder="图片高度(px)" />
+          </div>
+          <div class="stage-toolbar" style="justify-content:flex-start;margin-top:8px;">
+            <button class="btn btn-lite" type="button" data-flow-index="${idx}" data-flow-act="up">上移</button>
+            <button class="btn btn-lite" type="button" data-flow-index="${idx}" data-flow-act="down">下移</button>
+            <button class="btn btn-warn" type="button" data-flow-index="${idx}" data-flow-act="del">删</button>
+            <label class="file-upload">上传多图<input type="file" multiple accept="image/*" data-flow-index="${idx}" data-flow-field="images" /></label>
+          </div>
+        ` : "";
+        return `
+          <div class="flow-node tone-${idx % 3}" data-flow-node="${idx}">
+            <div class="goal-item-head">
+              ${title}
+              <button class="goal-toggle" type="button" data-flow-index="${idx}" data-flow-act="toggle">${open ? "收起" : "展开"}</button>
+            </div>
+            ${open ? `${body}${gallery}${actions}` : ""}
+          </div>
+        `;
+      }).join("");
+      target.innerHTML = `${toolbar}<div class="flow-track"><svg class="flow-links"></svg>${cards}</div>`;
+      drawFlowLinks(target);
+      target.querySelectorAll(".flow-gallery img").forEach((img) => {
+        img.addEventListener("load", () => drawFlowLinks(target), { once: true });
+      });
+    }
+
+    function drawFlowLinks(target = els.flowCanvas) {
+      const track = target.querySelector(".flow-track");
+      const svg = target.querySelector(".flow-links");
+      if (!track || !svg) return;
+      const nodes = Array.from(track.querySelectorAll("[data-flow-node]"));
+      const width = track.scrollWidth;
+      const height = track.scrollHeight;
+      svg.setAttribute("width", String(width));
+      svg.setAttribute("height", String(height));
+      if (nodes.length < 2) {
+        svg.innerHTML = "";
+        return;
+      }
+
+      const defs = `
+        <defs>
+          <marker id="flowArrow" markerWidth="4" markerHeight="4" refX="3.6" refY="2" orient="auto">
+            <path d="M0,0 L4,2 L0,4 Z" fill="rgba(100, 116, 139, 0.72)"></path>
+          </marker>
+        </defs>
+      `;
+      const paths = nodes.slice(0, -1).map((node, idx) => {
+        const next = nodes[idx + 1];
+        const x1 = node.offsetLeft + node.offsetWidth;
+        const y1 = node.offsetTop + node.offsetHeight / 2;
+        const x2 = next.offsetLeft;
+        const y2 = next.offsetTop + next.offsetHeight / 2;
+        const mid = x1 + (x2 - x1) * 0.5;
+        const endX = Math.max(x1 + 8, x2 - 14);
+        const d = `M ${x1} ${y1} L ${mid} ${y1} L ${mid} ${y2} L ${endX} ${y2}`;
+        return `<path d="${d}" marker-end="url(#flowArrow)"></path>`;
+      }).join("");
+      svg.innerHTML = `${defs}${paths}`;
+    }
+
+    function renderAllFlowCanvases() {
+      renderFlowCanvas(els.flowCanvas);
+      state.pages.forEach((p) => {
+        if (p.type !== "flow-copy") return;
+        const canvas = p.el.querySelector(`[data-flow-copy="${p.id}"]`);
+        renderFlowCanvas(canvas);
+      });
+    }
+
+    function openLightbox(src) {
+      if (!src) return;
+      els.lightboxImage.src = src;
+      els.imageLightbox.classList.add("show");
+    }
+
+    function closeLightbox() {
+      els.imageLightbox.classList.remove("show");
+      els.lightboxImage.src = "";
+    }
+
+    function renderCasesShowcase() {
+      const toolbar = state.editMode
+        ? `<div class="stage-toolbar"><button class="btn btn-lite" type="button" data-case-act="add">+ 新增案例</button></div>`
+        : "";
+      const cards = state.cases.map((c, idx) => {
+        const title = state.editMode
+          ? `<input class="stage-field" data-case-index="${idx}" data-case-field="title" value="${esc(c.title)}" />`
+          : `<h4 class="case-title">${esc(c.title)}</h4>`;
+        const detail = state.editMode
+          ? `<textarea class="stage-textarea" data-case-index="${idx}" data-case-field="detail">${esc(c.detail)}</textarea>`
+          : `<p class="case-detail">${esc(c.detail)}</p>`;
+        const hasMedia = Boolean(c.image) || state.editMode;
+        const mediaStyle = imageSizeStyle(c, "imageWidth", "imageHeight", 180);
+        const media = c.image ? `<img src="${esc(c.image)}" data-view-image="1" style="${mediaStyle}" alt="案例图片" />` : "（可添加案例图片）";
+        const link = state.editMode
+          ? `<input class="stage-field" data-case-index="${idx}" data-case-field="link" value="${esc(c.link || "")}" placeholder="链接（可选）" />`
+          : (c.link ? `<a class="case-link" href="${esc(c.link)}" target="_blank">${esc(c.link)}</a>` : "");
+        const actions = state.editMode ? `
+          <div class="image-size-row">
+            <input class="stage-field" type="number" min="10" max="100" data-case-index="${idx}" data-case-field="imageWidth" value="${esc(c.imageWidth || 100)}" placeholder="宽度(%)" />
+            <input class="stage-field" type="number" min="60" max="1200" data-case-index="${idx}" data-case-field="imageHeight" value="${esc(c.imageHeight || 180)}" placeholder="高度(px)" />
+          </div>
+          <div class="stage-toolbar" style="justify-content:flex-start;margin-top:8px;">
+            <button class="btn btn-lite" type="button" data-case-index="${idx}" data-case-act="up">上移</button>
+            <button class="btn btn-lite" type="button" data-case-index="${idx}" data-case-act="down">下移</button>
+            <button class="btn btn-warn" type="button" data-case-index="${idx}" data-case-act="del">删</button>
+            <label class="file-upload">上传案例图<input type="file" accept="image/*" data-case-index="${idx}" data-case-field="image" /></label>
+          </div>
+        ` : "";
+        return `
+          <div class="case-card">
+            ${title}
+            <div class="case-row ${hasMedia ? "" : "case-row-no-media"}">
+              ${detail}
+              ${hasMedia ? `<div class="case-media">${media}</div>` : ""}
+            </div>
+            ${link}
+            ${actions}
+          </div>
+        `;
+      }).join("");
+      els.caseShowcase.innerHTML = `${toolbar}${cards}`;
+    }
+
+    function renderAllDynamic() {
+      renderCoverCards();
+      state.pages.forEach((p) => {
+        if (p.id === "cover") return;
+        if (!state.sections[p.id]) return;
+        const container = p.el.querySelector(".goal-points");
+        if (!container) return;
+        renderSection(p.id, container);
+      });
+      renderToolsShowcase();
+      renderAllFlowCanvases();
+      renderCasesShowcase();
+      renderUploadTemplateWidgets();
+    }
+
+    function getTemplateConfigMap() {
+      return {
+        flow: { navTitle: "流程图", navDesc: "模板页", title: "从构思到上线的流程图", subtitle: "流程图形式展示，支持展开/收起步骤内容。", badge: "第 4 步" },
+        demo: { navTitle: "Demo演示", navDesc: "模板页", title: "上传并展示你的交互 Demo", subtitle: "通过 Tab 在 Demo 展示与 Prompt 展示之间切换。", badge: "第 3 步" },
+        rich: { navTitle: "图文展示", navDesc: "模板页", title: "常见问题与建议", subtitle: "结尾页用于答疑，帮同学快速进入实操。", badge: "第 7 步" },
+        tools: { navTitle: "工具介绍", navDesc: "模板页", title: "工具介绍（图文展示）", subtitle: "默认包含 Gemini、OpenAI Codex、伏羲易生诸相，你可以继续增删改。", badge: "新增" }
+      };
+    }
+
+    function resolveTemplateType(pageDesc) {
+      if (pageDesc && pageDesc.templateType) return pageDesc.templateType;
+      if (!pageDesc) return "rich";
+      if (pageDesc.type === "flow-copy") return "flow";
+      if (pageDesc.type === "upload-copy") return "demo";
+      if (pageDesc.type === "tools-copy") return "tools";
+      return "rich";
+    }
+
+    function createTemplateSections(type) {
+      if (type !== "rich") return [];
+      return [
+        { ...createSectionItem("如果模型输出混乱了怎么办？"), detail: "先锁定页面规则（配色、字体、布局、组件状态），再补内容字段，避免一次性要求过多。", open: true },
+        { ...createSectionItem("如何让网页变成线上版本？"), detail: "本地验证通过后，部署到 Vercel/Netlify 或公司静态服务器，并配置域名。", open: false },
+        { ...createSectionItem("如何精细化修改局部交互？"), detail: "只改目标组件的选择器、状态和动效，不做全局联动修改。", open: false }
+      ];
+    }
+
+    function buildTemplateInner(type, pageId) {
+      if (type === "flow") {
+        return `
+          <div class="flow-wrap">
+            <div class="flow-canvas" data-flow-copy="${pageId}"></div>
+          </div>
+        `;
+      }
+      if (type === "demo") {
+        return `
+          <div class="upload-wrap upload-widget" data-upload-page="${pageId}">
+            <div class="upload-head">
+              <div class="upload-left">
+                <div class="project-tabs" data-upload-project-tabs></div>
+                <div class="tab-header">
+                  <button class="tab-btn active" type="button" data-upload-tab="demo">Demo 展示</button>
+                  <button class="tab-btn" type="button" data-upload-tab="prompt">Prompt 展示</button>
+                </div>
+              </div>
+              <div class="upload-actions" data-upload-actions="demo">
+                <input type="file" accept=".html,text/html" data-upload-file />
+                <button class="btn btn-primary" type="button" data-upload-show-demo>展示 Demo</button>
+              </div>
+              <div class="upload-actions hidden" data-upload-actions="prompt">
+                <button class="btn btn-primary" type="button" data-upload-render>Markdown 展示</button>
+                <button class="btn btn-lite" type="button" data-upload-clear>清空</button>
+              </div>
+            </div>
+            <div class="tab-panel active" data-upload-panel="demo">
+              <iframe class="demo-frame" data-upload-frame title="上传Demo展示区"></iframe>
+            </div>
+            <div class="tab-panel" data-upload-panel="prompt">
+              <div class="round-tabs" data-upload-round-tabs></div>
+              <textarea class="prompt-input" data-upload-prompt placeholder="在这里粘贴完整 Prompt（支持 Markdown）"></textarea>
+              <div class="prompt-preview" data-upload-preview>这里展示 Prompt 的 Markdown 渲染结果。</div>
+            </div>
+          </div>
+        `;
+      }
+      if (type === "tools") {
+        return `
+          <div class="tools-wrap">
+            <div class="tools-grid" data-tools-showcase="${pageId}"></div>
+            <div class="tool-detail" data-tools-detail="${pageId}"></div>
+          </div>
+        `;
+      }
+      return `<div class="goal-points"></div>`;
+    }
+
+    function createTemplatePage(type = "rich", options = {}) {
+      const templateMap = getTemplateConfigMap();
+      const tpl = templateMap[type] || templateMap.rich;
+      const id = options.id || `tpl-${type}-${Date.now()}`;
+      const pageType = type === "flow" ? "flow-copy" : type === "demo" ? "upload-copy" : type === "tools" ? "tools-copy" : "base";
+      const article = document.createElement("article");
+      article.className = "slide";
+      article.dataset.pageId = id;
+      article.dataset.pageType = pageType;
+      article.dataset.pageTemplateType = type;
+      article.dataset.navTitle = options.navTitle || tpl.navTitle;
+      article.dataset.navDesc = options.navDesc || tpl.navDesc;
+      article.innerHTML = `
+        <div class="hero">
+          <span class="badge">${esc(options.badge || tpl.badge)}</span>
+          <h2 class="slide-main-title inline-editable">${esc(options.title || tpl.title)}</h2>
+          <p class="slide-main-subtitle inline-editable">${esc(options.subtitle || tpl.subtitle)}</p>
+          ${buildTemplateInner(type, id)}
+        </div>
+      `;
+      const page = {
+        id,
+        type: pageType,
+        navTitle: options.navTitle || tpl.navTitle,
+        navDesc: options.navDesc || tpl.navDesc,
+        title: options.title || tpl.title,
+        subtitle: options.subtitle || tpl.subtitle,
+        el: article,
+        titleEl: article.querySelector(".slide-main-title"),
+        subtitleEl: article.querySelector(".slide-main-subtitle")
+      };
+      return page;
+    }
+
+    function addTemplatePage(type = "rich") {
+      const page = createTemplatePage(type);
+      els.slidesWrap.appendChild(page.el);
+      if (type === "rich") {
+        state.sections[page.id] = createTemplateSections(type);
+      }
+      if (type === "demo") {
+        ensureUploadTemplateState(page.id);
+      }
+      state.pages.push(page);
+      go(state.pages.length - 1);
+      persistState();
+    }
+
+    function applyPersistedState(parsed) {
+      if (!parsed || typeof parsed !== "object") return;
+      if (parsed.brandTitle && els.brandTitle) els.brandTitle.textContent = parsed.brandTitle;
+      if (parsed.brandDesc && els.brandDesc) els.brandDesc.textContent = parsed.brandDesc;
+
+      state.sidebarCollapsed = Boolean(parsed.sidebarCollapsed);
+      if (Array.isArray(parsed.layoutStyles) && parsed.layoutStyles.length) state.layoutStyles = parsed.layoutStyles;
+      if (parsed.sections && typeof parsed.sections === "object") state.sections = parsed.sections;
+      if (Array.isArray(parsed.tools) && parsed.tools.length) state.tools = parsed.tools;
+      if (Array.isArray(parsed.flowSteps) && parsed.flowSteps.length) state.flowSteps = parsed.flowSteps;
+      if (Array.isArray(parsed.cases) && parsed.cases.length) state.cases = parsed.cases;
+      state.activeToolIndex = Math.max(0, Math.min(Number(parsed.activeToolIndex) || 0, Math.max(0, state.tools.length - 1)));
+
+      state.upload = normalizeUploadState(parsed.upload);
+      state.uploadTemplates = {};
+      if (parsed.uploadTemplates && typeof parsed.uploadTemplates === "object") {
+        Object.entries(parsed.uploadTemplates).forEach(([key, val]) => {
+          state.uploadTemplates[key] = normalizeUploadState(val);
+        });
+      }
+
+      const savedPages = Array.isArray(parsed.pages) ? parsed.pages : [];
+      if (savedPages.length) {
+        const existingMap = new Map(state.pages.map((p) => [p.id, p]));
+        const ordered = [];
+        savedPages.forEach((meta) => {
+          if (!meta || !meta.id) return;
+          let page = existingMap.get(meta.id);
+          if (!page) {
+            const templateType = resolveTemplateType(meta);
+            page = createTemplatePage(templateType, {
+              id: meta.id,
+              navTitle: meta.navTitle,
+              navDesc: meta.navDesc,
+              title: meta.title,
+              subtitle: meta.subtitle
+            });
+            if (templateType === "rich" && !state.sections[meta.id]) {
+              state.sections[meta.id] = createTemplateSections("rich");
+            }
+            if (templateType === "demo") {
+              ensureUploadTemplateState(meta.id);
+            }
+          }
+          if (!page) return;
+          page.navTitle = meta.navTitle || page.navTitle;
+          page.navDesc = meta.navDesc || page.navDesc;
+          page.title = meta.title || page.title;
+          page.subtitle = meta.subtitle || page.subtitle;
+          if (page.el && page.el.dataset) {
+            page.el.dataset.navTitle = page.navTitle;
+            page.el.dataset.navDesc = page.navDesc;
+          }
+          if (page.titleEl) page.titleEl.textContent = page.title;
+          if (page.subtitleEl) page.subtitleEl.textContent = page.subtitle;
+          ordered.push(page);
+          existingMap.delete(page.id);
+        });
+
+        state.pages.forEach((p) => {
+          if (!existingMap.has(p.id)) return;
+          ordered.push(p);
+          existingMap.delete(p.id);
+        });
+        state.pages = ordered;
+        els.slidesWrap.innerHTML = "";
+        state.pages.forEach((p) => els.slidesWrap.appendChild(p.el));
+      }
+
+      state.current = Math.max(0, Math.min(Number(parsed.current) || 0, Math.max(0, state.pages.length - 1)));
+    }
+
+    async function loadPersistedState() {
+      const parsedCandidates = [];
+      const pushCandidate = (raw, sourceWeight = 0) => {
+        const parsed = safeParseSnapshot(typeof raw === "string" ? raw : null);
+        if (!parsed) return;
+        const savedAt = Number(parsed.savedAt) || 0;
+        parsedCandidates.push({ parsed, savedAt, sourceWeight });
+      };
+
+      try { pushCandidate(localStorage.getItem(STORAGE_KEY), 20); } catch (err) {}
+      try { pushCandidate(localStorage.getItem(STORAGE_LAST_GOOD_KEY), 10); } catch (err) {}
+      try { pushCandidate(localStorage.getItem(STORAGE_KEY_BASE), 5); } catch (err) {}
+
+      const idbCandidates = [
+        await idbGet(STORAGE_KEY),
+        await idbGet(STORAGE_LAST_GOOD_KEY),
+        await idbGet(STORAGE_KEY_BASE)
+      ];
+      pushCandidate(idbCandidates[0], 40);
+      pushCandidate(idbCandidates[1], 30);
+      pushCandidate(idbCandidates[2], 25);
+
+      let parsed = null;
+      if (parsedCandidates.length) {
+        parsedCandidates.sort((a, b) => {
+          if (a.savedAt !== b.savedAt) return b.savedAt - a.savedAt;
+          return b.sourceWeight - a.sourceWeight;
+        });
+        parsed = parsedCandidates[0].parsed;
+      }
+
+      if (!parsed) {
+        setSaveStatus("warn", "未找到历史内容，建议先导出备份");
+        return;
+      }
+
+      applyPersistedState(parsed);
+      state.lastPersistAt = Number(parsed.savedAt) || Date.now();
+      state.isDirty = false;
+      state.lastPersistFailed = false;
+      state.lastPersistError = "";
+      setSaveStatus("saved", `已恢复 ${formatTimestamp(state.lastPersistAt)}`);
+    }
+
+    async function importBackupFromFile(file) {
+      if (!file) return;
+      const text = await file.text();
+      const parsed = safeParseSnapshot(text);
+      if (!parsed) {
+        setSaveStatus("error", "导入失败：备份文件格式不正确");
+        return;
+      }
+      if (!parsed.sections || !Array.isArray(parsed.pages)) {
+        setSaveStatus("error", "导入失败：缺少必要字段");
+        return;
+      }
+      parsed.savedAt = Date.now();
+      const persistedText = JSON.stringify(parsed);
+
+      applyPersistedState(parsed);
+      normalizeStateData();
+      state.current = Math.max(0, Math.min(state.current, Math.max(0, state.pages.length - 1)));
+
+      renderDirList();
+      renderAllDynamic();
+      renderPromptRounds();
+      renderPromptPreview();
+      autoResizePrompt();
+      setUploadTab(state.upload.tab === "prompt" ? "prompt" : "demo");
+      updateSlidesVisibility();
+      setEditMode(false);
+
+      state.lastPersistAt = Date.now();
+      state.isDirty = false;
+      state.lastPersistFailed = false;
+      state.lastPersistError = "";
+      setSaveStatus("saved", `已导入 ${formatTimestamp(state.lastPersistAt)}`);
+
+      try {
+        localStorage.setItem(STORAGE_KEY, persistedText);
+        localStorage.setItem(STORAGE_LAST_GOOD_KEY, persistedText);
+        localStorage.setItem(STORAGE_KEY_BASE, persistedText);
+      } catch (err) {
+        // localStorage may fail on quota in file:// mode
+      }
+      try {
+        await idbSet(STORAGE_KEY, persistedText);
+        await idbSet(STORAGE_LAST_GOOD_KEY, persistedText);
+        await idbSet(STORAGE_KEY_BASE, persistedText);
+        await appendSnapshotToIndexedDb(persistedText);
+      } catch (err) {
+        // keep runtime usable even if idb unavailable
+      }
+    }
+
+    function openTemplateModal() {
+      if (state.editMode) return;
+      els.templateModal.classList.add("show");
+    }
+
+    function closeTemplateModal() {
+      els.templateModal.classList.remove("show");
+    }
+
+    function deleteCurrentPage() {
+      if (state.pages.length <= 1) return;
+      const idx = state.current;
+      const page = currentPage();
+      if (page && state.sections[page.id] && !DEFAULT_PAGE_IDS.includes(page.id)) {
+        delete state.sections[page.id];
+      }
+      if (page && state.uploadTemplates[page.id]) {
+        delete state.uploadTemplates[page.id];
+      }
+      page.el.remove();
+      state.pages.splice(idx, 1);
+      go(Math.max(0, idx - 1));
+      persistState();
+    }
+
+    function setUploadTab(tab) {
+      state.upload.tab = tab;
+      const isDemo = tab === "demo";
+      els.tabDemoBtn.classList.toggle("active", isDemo);
+      els.tabPromptBtn.classList.toggle("active", !isDemo);
+      els.tabDemoPanel.classList.toggle("active", isDemo);
+      els.tabPromptPanel.classList.toggle("active", !isDemo);
+      els.demoTopActions.classList.toggle("hidden", !isDemo);
+      els.promptTopActions.classList.toggle("hidden", isDemo);
+      renderProjectTabs();
+      if (!isDemo) {
+        renderPromptRounds();
+        const current = currentRound();
+        state.upload.prompt = current ? current.content : "";
+        els.promptInput.value = state.upload.prompt;
+        autoResizePrompt();
+        renderPromptPreview();
+      } else {
+        const project = currentProject();
+        els.demoFrame.src = getProjectFrameUrl(project);
+      }
+    }
+
+    function renderUploadTemplateWidget(pageId) {
+      const widget = document.querySelector(`.upload-widget[data-upload-page="${pageId}"]`);
+      if (!widget) return;
+      const upload = ensureUploadTemplateState(pageId);
+      const project = upload.projects[upload.activeProject];
+      if (!project) return;
+
+      const projectTabs = widget.querySelector("[data-upload-project-tabs]");
+      if (projectTabs) {
+        const tabs = upload.projects.map((item, idx) => {
+          const cls = idx === upload.activeProject ? "project-tab active" : "project-tab";
+          return `<button class="${cls}" type="button" data-upload-project-index="${idx}">${esc(item.name)} <span class="x">#${idx + 1}</span></button>`;
+        }).join("");
+        projectTabs.innerHTML = `${tabs}<button class="project-tab" type="button" data-upload-project-act="add">+ 项目</button>`;
+      }
+
+      widget.querySelectorAll("[data-upload-tab]").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.uploadTab === upload.tab);
+      });
+      widget.querySelectorAll("[data-upload-panel]").forEach((panel) => {
+        panel.classList.toggle("active", panel.dataset.uploadPanel === upload.tab);
+      });
+      widget.querySelectorAll("[data-upload-actions]").forEach((row) => {
+        row.classList.toggle("hidden", row.dataset.uploadActions !== upload.tab);
+      });
+
+      const frame = widget.querySelector("[data-upload-frame]");
+      if (frame) frame.src = getProjectFrameUrl(project);
+
+      const roundTabs = widget.querySelector("[data-upload-round-tabs]");
+      if (roundTabs) {
+        const rounds = project.rounds.map((round, idx) => {
+          const cls = idx === project.activeRound ? "round-btn active" : "round-btn";
+          return `<button class="${cls}" type="button" data-upload-round-index="${idx}">${esc(round.name)}</button>`;
+        }).join("");
+        roundTabs.innerHTML = `${rounds}<button class="round-btn" type="button" data-upload-round-act="add">添加</button>`;
+      }
+
+      const promptInput = widget.querySelector("[data-upload-prompt]");
+      const round = project.rounds[project.activeRound];
+      upload.prompt = round ? round.content : "";
+      if (promptInput) {
+        promptInput.value = upload.prompt;
+        promptInput.style.height = "auto";
+        promptInput.style.height = `${Math.max(120, Math.min(480, promptInput.scrollHeight))}px`;
+      }
+
+      const preview = widget.querySelector("[data-upload-preview]");
+      if (preview) preview.innerHTML = markdownToHtml(upload.prompt);
+    }
+
+    function renderUploadTemplateWidgets() {
+      state.pages.forEach((p) => {
+        if (p.type !== "upload-copy") return;
+        renderUploadTemplateWidget(p.id);
+      });
+    }
+
+    function renderProjectTabs() {
+      const tabs = state.upload.projects.map((project, idx) => {
+        const cls = idx === state.upload.activeProject ? "project-tab active" : "project-tab";
+        return `<button class="${cls}" type="button" data-project-index="${idx}">${esc(project.name)}<span class="x">#${idx + 1}</span></button>`;
+      }).join("");
+      els.projectTabs.innerHTML = `${tabs}<button class="project-tab" type="button" data-project-act="add">+ 项目</button>`;
+    }
+
+    function renderPromptRounds() {
+      const project = currentProject();
+      if (!project) return;
+      const tabs = project.rounds.map((round, idx) => {
+        const cls = idx === project.activeRound ? "round-btn active" : "round-btn";
+        return `<button class="${cls}" type="button" data-round-index="${idx}">${esc(round.name)}</button>`;
+      }).join("");
+      els.promptRoundTabs.innerHTML = `${tabs}<button class="round-btn" type="button" data-round-act="add">添加</button>`;
+    }
+
+    function setPromptRound(index) {
+      const project = currentProject();
+      if (!project || !Number.isFinite(index) || !project.rounds[index]) return;
+      project.activeRound = index;
+      state.upload.prompt = project.rounds[index].content || "";
+      els.promptInput.value = state.upload.prompt;
+      renderPromptRounds();
+      autoResizePrompt();
+      renderPromptPreview();
+    }
+
+    function markdownInline(raw) {
+      let s = esc(raw);
+      s = s.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+      s = s.replace(/`([^`]+)`/g, "<code>$1</code>");
+      s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+      return s;
+    }
+
+    function markdownToHtml(md) {
+      const lines = String(md || "").replace(/\r/g, "").split("\n");
+      let html = "";
+      let inList = false;
+      let inCode = false;
+      lines.forEach((line) => {
+        if (/^```/.test(line.trim())) {
+          html += inCode ? "</code></pre>" : "<pre><code>";
+          inCode = !inCode;
+          return;
+        }
+        if (inCode) {
+          html += `${esc(line)}\n`;
+          return;
+        }
+        if (!line.trim()) {
+          if (inList) {
+            html += "</ul>";
+            inList = false;
+          }
+          return;
+        }
+        const h3 = line.match(/^###\s+(.+)$/);
+        const h2 = line.match(/^##\s+(.+)$/);
+        const h1 = line.match(/^#\s+(.+)$/);
+        const li = line.match(/^[-*]\s+(.+)$/);
+        if (h1 || h2 || h3) {
+          if (inList) {
+            html += "</ul>";
+            inList = false;
+          }
+          if (h1) html += `<h1>${markdownInline(h1[1])}</h1>`;
+          if (h2) html += `<h2>${markdownInline(h2[1])}</h2>`;
+          if (h3) html += `<h3>${markdownInline(h3[1])}</h3>`;
+          return;
+        }
+        if (li) {
+          if (!inList) {
+            html += "<ul>";
+            inList = true;
+          }
+          html += `<li>${markdownInline(li[1])}</li>`;
+          return;
+        }
+        if (inList) {
+          html += "</ul>";
+          inList = false;
+        }
+        html += `<p>${markdownInline(line)}</p>`;
+      });
+      if (inList) html += "</ul>";
+      if (inCode) html += "</code></pre>";
+      return html || "<p>这里展示 Prompt 的 Markdown 渲染结果。</p>";
+    }
+
+    function renderPromptPreview() {
+      els.promptPreview.innerHTML = markdownToHtml(state.upload.prompt);
+    }
+
+    function autoResizePrompt() {
+      els.promptInput.style.height = "auto";
+      const target = Math.max(120, Math.min(480, els.promptInput.scrollHeight));
+      els.promptInput.style.height = `${target}px`;
+    }
+
+    async function handleSectionFileChange(input) {
+      const pageId = input.dataset.sectionPage;
+      const idx = Number(input.dataset.sectionIndex);
+      if (!pageId || !Number.isFinite(idx)) return;
+      const file = input.files && input.files[0];
+      if (!file) return;
+      const dataUrl = await readFileAsDataUrl(file);
+      const item = state.sections[pageId] && state.sections[pageId][idx];
+      if (!item) return;
+      item.image = dataUrl;
+      renderSection(pageId, getSectionContainer(pageId));
+      markDirty();
+      await persistStateNow().catch(() => {});
+    }
+
+    async function handleCoverFileChange(input) {
+      const idx = Number(input.dataset.coverIndex);
+      const file = input.files && input.files[0];
+      if (!Number.isFinite(idx) || !file || !state.sections.cover[idx]) return;
+      state.sections.cover[idx].image = await readFileAsDataUrl(file);
+      renderCoverCards();
+      markDirty();
+      await persistStateNow().catch(() => {});
+    }
+
+    async function handleFlowFileChange(input) {
+      const idx = Number(input.dataset.flowIndex);
+      const files = Array.from(input.files || []);
+      if (!Number.isFinite(idx) || !files.length || !state.flowSteps[idx]) return;
+      const urls = await Promise.all(files.map(readFileAsDataUrl));
+      const prev = Array.isArray(state.flowSteps[idx].images) ? state.flowSteps[idx].images : [];
+      state.flowSteps[idx].images = prev.concat(urls);
+      renderAllFlowCanvases();
+      markDirty();
+      await persistStateNow().catch(() => {});
+    }
+
+    async function handleCaseFileChange(input) {
+      const idx = Number(input.dataset.caseIndex);
+      const file = input.files && input.files[0];
+      if (!Number.isFinite(idx) || !file || !state.cases[idx]) return;
+      state.cases[idx].image = await readFileAsDataUrl(file);
+      renderCasesShowcase();
+      markDirty();
+      await persistStateNow().catch(() => {});
+    }
+
+    async function handleToolFileChange(input) {
+      const file = input.files && input.files[0];
+      const field = input.dataset.toolFile;
+      const tool = state.tools[state.activeToolIndex];
+      if (!file || !field || !tool) return;
+      tool[field] = await readFileAsDataUrl(file);
+      renderToolsShowcase();
+      markDirty();
+      await persistStateNow().catch(() => {});
+    }
+
+    function bindEvents() {
+      const goPrev = () => go(state.current - 1);
+      const goNext = () => go(state.current + 1);
+      els.prevBtn.addEventListener("click", goPrev);
+      els.nextBtn.addEventListener("click", goNext);
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && els.imageLightbox.classList.contains("show")) {
+          closeLightbox();
+          return;
+        }
+        if (e.key === "Escape" && els.templateModal.classList.contains("show")) {
+          closeTemplateModal();
+          return;
+        }
+        if (e.key === "ArrowLeft") goPrev();
+        if (e.key === "ArrowRight") goNext();
+      });
+
+      els.editToggleBtn.addEventListener("click", openTemplateModal);
+      els.topEditBtn.addEventListener("click", () => setEditMode(!state.editMode));
+      els.sidebarToggleBtn.addEventListener("click", () => {
+        state.sidebarCollapsed = !state.sidebarCollapsed;
+        applySidebarCollapsed();
+      });
+      if (els.brandTitle) {
+        els.brandTitle.addEventListener("input", () => {
+          refreshStageTitle();
+          if (state.editMode) markDirty();
+        });
+      }
+      if (els.exportBackupBtn) {
+        els.exportBackupBtn.addEventListener("click", () => {
+          try {
+            const raw = JSON.stringify(buildSnapshot(), null, 2);
+            exportSnapshotFile(raw);
+            setSaveStatus("saved", `已导出备份 ${formatTimestamp(Date.now())}`);
+          } catch (err) {
+            setSaveStatus("error", "导出备份失败");
+          }
+        });
+      }
+      if (els.importBackupBtn && els.importBackupInput) {
+        els.importBackupBtn.addEventListener("click", () => {
+          if (state.isDirty) {
+            const ok = window.confirm("当前有未保存修改，导入备份会覆盖当前内容。是否继续？");
+            if (!ok) return;
+          }
+          els.importBackupInput.value = "";
+          els.importBackupInput.click();
+        });
+        els.importBackupInput.addEventListener("change", async (e) => {
+          const file = e.target.files && e.target.files[0];
+          if (!file) return;
+          try {
+            setSaveStatus("saving", "导入中...");
+            await importBackupFromFile(file);
+          } catch (err) {
+            setSaveStatus("error", "导入失败，请检查备份文件");
+          } finally {
+            e.target.value = "";
+          }
+        });
+      }
+      if (els.deletePageBtn) {
+        els.deletePageBtn.addEventListener("click", deleteCurrentPage);
+      }
+      if (els.templateCancelBtn) {
+        els.templateCancelBtn.addEventListener("click", closeTemplateModal);
+      }
+      els.templateModal.addEventListener("click", (e) => {
+        if (e.target === els.templateModal) closeTemplateModal();
+      });
+      els.templateModal.addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-template-type]");
+        if (!btn) return;
+        const type = btn.dataset.templateType || "rich";
+        addTemplatePage(type);
+        closeTemplateModal();
+      });
+      els.addLayoutStyleBtn.addEventListener("click", () => {
+        state.layoutStyles.push({ name: "新结构样式", detail: "补充当前页面结构说明" });
+        markDirty();
+        renderLayoutStylesEditor();
+      });
+
+      els.layoutStyleList.addEventListener("input", (e) => {
+        const idx = Number(e.target.dataset.layoutIndex);
+        const field = e.target.dataset.layoutField;
+        if (!Number.isFinite(idx) || !field || !state.layoutStyles[idx]) return;
+        state.layoutStyles[idx][field] = e.target.value;
+        markDirty();
+      });
+
+      els.layoutStyleList.addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-layout-act]");
+        if (!btn) return;
+        const idx = Number(btn.dataset.layoutIndex);
+        const act = btn.dataset.layoutAct;
+        if (!Number.isFinite(idx) || !state.layoutStyles[idx]) return;
+        if (act === "del") state.layoutStyles.splice(idx, 1);
+        if (act === "up" && idx > 0) {
+          const tmp = state.layoutStyles[idx - 1];
+          state.layoutStyles[idx - 1] = state.layoutStyles[idx];
+          state.layoutStyles[idx] = tmp;
+        }
+        if (act === "down" && idx < state.layoutStyles.length - 1) {
+          const tmp = state.layoutStyles[idx + 1];
+          state.layoutStyles[idx + 1] = state.layoutStyles[idx];
+          state.layoutStyles[idx] = tmp;
+        }
+        if (!state.layoutStyles.length) {
+          state.layoutStyles.push({ name: "新结构样式", detail: "补充当前页面结构说明" });
+        }
+        markDirty();
+        renderLayoutStylesEditor();
+      });
+
+      let dragIndex = -1;
+      let toolImageDragState = null;
+      let suppressLightboxClick = false;
+      els.dirList.addEventListener("input", (e) => {
+        const field = e.target.dataset.dirField;
+        const idx = Number(e.target.dataset.dirIndex);
+        if (!field || !Number.isFinite(idx) || !state.pages[idx]) return;
+        if (field === "title") state.pages[idx].navTitle = e.target.value;
+        if (field === "desc") state.pages[idx].navDesc = e.target.value;
+        markDirty();
+      });
+
+      els.dirList.addEventListener("dragstart", (e) => {
+        if (e.target.closest("input,textarea")) {
+          e.preventDefault();
+          return;
+        }
+        const item = e.target.closest(".dir-item");
+        if (!item) return;
+        dragIndex = Number(item.dataset.dirIndex);
+        item.classList.add("dragging");
+        e.dataTransfer.effectAllowed = "move";
+      });
+
+      els.dirList.addEventListener("dragend", (e) => {
+        const item = e.target.closest(".dir-item");
+        if (item) item.classList.remove("dragging");
+        els.dirList.querySelectorAll(".drop-target").forEach((x) => x.classList.remove("drop-target"));
+      });
+
+      els.dirList.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        const item = e.target.closest(".dir-item");
+        if (!item) return;
+        els.dirList.querySelectorAll(".drop-target").forEach((x) => x.classList.remove("drop-target"));
+        item.classList.add("drop-target");
+      });
+
+      els.dirList.addEventListener("drop", (e) => {
+        e.preventDefault();
+        const item = e.target.closest(".dir-item");
+        if (!item) return;
+        const dropIndex = Number(item.dataset.dirIndex);
+        if (!Number.isFinite(dragIndex) || !Number.isFinite(dropIndex) || dragIndex === dropIndex) return;
+        const activeId = currentPage().id;
+        const moved = state.pages.splice(dragIndex, 1)[0];
+        state.pages.splice(dropIndex, 0, moved);
+        els.slidesWrap.innerHTML = "";
+        state.pages.forEach((p) => els.slidesWrap.appendChild(p.el));
+        state.current = state.pages.findIndex((p) => p.id === activeId);
+        markDirty();
+        renderDirList();
+        updateSlidesVisibility();
+      });
+
+      els.slidesWrap.addEventListener("input", (e) => {
+        if (!state.editMode) return;
+        markDirty();
+        const p = currentPage();
+        if (e.target === p.titleEl) p.title = p.titleEl.textContent.trim();
+        if (e.target === p.subtitleEl) p.subtitle = p.subtitleEl.textContent.trim();
+
+        const sectionField = e.target.dataset.sectionField;
+        if (sectionField && sectionField !== "image") {
+          const pageId = e.target.dataset.sectionPage;
+          const idx = Number(e.target.dataset.sectionIndex);
+          const item = state.sections[pageId] && state.sections[pageId][idx];
+          if (item) {
+            item[sectionField] = e.target.value;
+            if (sectionField === "imageWidth" || sectionField === "imageHeight") {
+              const width = Math.max(10, Math.min(100, Number(item.imageWidth) || 100));
+              const height = Math.max(60, Math.min(1200, Number(item.imageHeight) || 220));
+              const imgs = e.target.closest(".goal-item")?.querySelectorAll(".goal-media img") || [];
+              applyImageSizeToNodeList(Array.from(imgs), width, height);
+            }
+          }
+        }
+
+        const coverField = e.target.dataset.coverField;
+        if (coverField && coverField !== "image") {
+          const idx = Number(e.target.dataset.coverIndex);
+          if (state.sections.cover[idx]) {
+            state.sections.cover[idx][coverField] = e.target.value;
+            if (coverField === "imageWidth" || coverField === "imageHeight") {
+              const item = state.sections.cover[idx];
+              const width = Math.max(10, Math.min(100, Number(item.imageWidth) || 100));
+              const height = Math.max(60, Math.min(1200, Number(item.imageHeight) || 180));
+              const imgs = e.target.closest(".card")?.querySelectorAll(".goal-media img") || [];
+              applyImageSizeToNodeList(Array.from(imgs), width, height);
+            }
+          }
+        }
+
+        const flowField = e.target.dataset.flowField;
+        if (flowField && flowField !== "image") {
+          const idx = Number(e.target.dataset.flowIndex);
+          if (state.flowSteps[idx]) {
+            state.flowSteps[idx][flowField] = e.target.value;
+            if (flowField === "imageWidth" || flowField === "imageHeight") {
+              const step = state.flowSteps[idx];
+              const width = Math.max(10, Math.min(100, Number(step.imageWidth) || 100));
+              const height = Math.max(60, Math.min(800, Number(step.imageHeight) || 120));
+              const imgs = e.target.closest(".flow-node")?.querySelectorAll(".flow-gallery img") || [];
+              applyImageSizeToNodeList(Array.from(imgs), width, height);
+            }
+          }
+        }
+
+        const caseField = e.target.dataset.caseField;
+        if (caseField && caseField !== "image") {
+          const idx = Number(e.target.dataset.caseIndex);
+          if (state.cases[idx]) {
+            state.cases[idx][caseField] = e.target.value;
+            if (caseField === "imageWidth" || caseField === "imageHeight") {
+              const item = state.cases[idx];
+              const width = Math.max(10, Math.min(100, Number(item.imageWidth) || 100));
+              const height = Math.max(60, Math.min(1200, Number(item.imageHeight) || 180));
+              const imgs = e.target.closest(".case-card")?.querySelectorAll(".case-media img") || [];
+              applyImageSizeToNodeList(Array.from(imgs), width, height);
+            }
+          }
+        }
+
+        const toolField = e.target.dataset.toolField;
+        if (toolField && state.tools[state.activeToolIndex]) {
+          state.tools[state.activeToolIndex][toolField] = e.target.value;
+          if (["coverWidth", "coverHeight", "detailWidth", "detailHeight"].includes(toolField)) {
+            liveUpdateToolImageSize();
+          }
+        }
+
+        const promptInput = e.target.closest("[data-upload-prompt]");
+        if (promptInput) {
+          const widget = promptInput.closest(".upload-widget");
+          if (!widget) return;
+          const pageId = widget.dataset.uploadPage;
+          const upload = ensureUploadTemplateState(pageId);
+          const project = upload.projects[upload.activeProject];
+          if (!project) return;
+          upload.prompt = promptInput.value;
+          const round = project.rounds[project.activeRound];
+          if (round) round.content = upload.prompt;
+          promptInput.style.height = "auto";
+          promptInput.style.height = `${Math.max(120, Math.min(480, promptInput.scrollHeight))}px`;
+        }
+      });
+
+      els.slidesWrap.addEventListener("click", async (e) => {
+        if (suppressLightboxClick) {
+          suppressLightboxClick = false;
+          return;
+        }
+        const previewImage = e.target.closest("img[data-view-image]");
+        if (previewImage) {
+          openLightbox(previewImage.getAttribute("src"));
+          return;
+        }
+
+        const coverBtn = e.target.closest("button[data-cover-act]");
+        if (coverBtn) {
+          const act = coverBtn.dataset.coverAct;
+          const idx = Number(coverBtn.dataset.coverIndex);
+          const items = state.sections.cover;
+          if (act === "add") items.push(createCoverItem("新封面模块"));
+          if (Number.isFinite(idx) && items[idx]) {
+            if (act === "del") items.splice(idx, 1);
+            if (act === "up" && idx > 0) {
+              const tmp = items[idx - 1];
+              items[idx - 1] = items[idx];
+              items[idx] = tmp;
+            }
+            if (act === "down" && idx < items.length - 1) {
+              const tmp = items[idx + 1];
+              items[idx + 1] = items[idx];
+              items[idx] = tmp;
+            }
+          }
+          if (!items.length) items.push(createCoverItem("新封面模块"));
+          markDirty();
+          renderCoverCards();
+          return;
+        }
+
+        const secBtn = e.target.closest("button[data-section-act]");
+        if (secBtn) {
+          const pageId = secBtn.dataset.sectionPage;
+          const act = secBtn.dataset.sectionAct;
+          const idx = Number(secBtn.dataset.sectionIndex);
+          const items = state.sections[pageId] || [];
+          if (act === "add") items.push(createSectionItem("新增条目"));
+          if (Number.isFinite(idx) && items[idx]) {
+            if (act === "toggle") items[idx].open = !items[idx].open;
+            if (act === "del") items.splice(idx, 1);
+            if (act === "up" && idx > 0) {
+              const tmp = items[idx - 1];
+              items[idx - 1] = items[idx];
+              items[idx] = tmp;
+            }
+            if (act === "down" && idx < items.length - 1) {
+              const tmp = items[idx + 1];
+              items[idx + 1] = items[idx];
+              items[idx] = tmp;
+            }
+          }
+          if (!items.length) items.push(createSectionItem("新增条目"));
+          markDirty();
+          renderSection(pageId, getSectionContainer(pageId));
+          return;
+        }
+
+        const flowBtn = e.target.closest("button[data-flow-act]");
+        if (flowBtn) {
+          const act = flowBtn.dataset.flowAct;
+          const idx = Number(flowBtn.dataset.flowIndex);
+          if (act === "add") state.flowSteps.push(createFlowStep("新流程"));
+          if (Number.isFinite(idx) && state.flowSteps[idx]) {
+            if (act === "toggle") state.flowSteps[idx].open = !state.flowSteps[idx].open;
+            if (act === "del") state.flowSteps.splice(idx, 1);
+            if (act === "up" && idx > 0) {
+              const tmp = state.flowSteps[idx - 1];
+              state.flowSteps[idx - 1] = state.flowSteps[idx];
+              state.flowSteps[idx] = tmp;
+            }
+            if (act === "down" && idx < state.flowSteps.length - 1) {
+              const tmp = state.flowSteps[idx + 1];
+              state.flowSteps[idx + 1] = state.flowSteps[idx];
+              state.flowSteps[idx] = tmp;
+            }
+          }
+          if (!state.flowSteps.length) state.flowSteps.push(createFlowStep("新流程"));
+          markDirty();
+          renderAllFlowCanvases();
+          return;
+        }
+
+        const toolSwitchBtn = e.target.closest("button[data-tool-switch]");
+        if (toolSwitchBtn) {
+          if (e.target.closest("img[data-tool-drag='cover']")) return;
+          if (e.target.closest("img[data-view-image]")) return;
+          const idx = Number(toolSwitchBtn.dataset.toolSwitch);
+          if (!Number.isFinite(idx) || !state.tools[idx]) return;
+          state.activeToolIndex = idx;
+          renderToolsShowcase();
+          return;
+        }
+
+        const toolActBtn = e.target.closest("button[data-tool-act]");
+        if (toolActBtn) {
+          const act = toolActBtn.dataset.toolAct;
+          if (act === "add") {
+            state.tools.push({ name: "新工具", subtitle: "填写工具副标题", detail: "填写工具正文介绍", link: "", coverImage: "", detailImage: "", coverWidth: 100, coverHeight: 96, detailWidth: 100, detailHeight: 330, coverPosX: 50, coverPosY: 50, detailPosX: 50, detailPosY: 50 });
+            state.activeToolIndex = state.tools.length - 1;
+          }
+          if (act === "del") {
+            state.tools.splice(state.activeToolIndex, 1);
+            if (!state.tools.length) {
+              state.tools.push({ name: "新工具", subtitle: "填写工具副标题", detail: "填写工具正文介绍", link: "", coverImage: "", detailImage: "", coverWidth: 100, coverHeight: 96, detailWidth: 100, detailHeight: 330, coverPosX: 50, coverPosY: 50, detailPosX: 50, detailPosY: 50 });
+            }
+            state.activeToolIndex = Math.max(0, Math.min(state.activeToolIndex, state.tools.length - 1));
+          }
+          markDirty();
+          renderToolsShowcase();
+          return;
+        }
+
+        const uploadTabBtn = e.target.closest("button[data-upload-tab]");
+        if (uploadTabBtn) {
+          const widget = uploadTabBtn.closest(".upload-widget");
+          if (!widget) return;
+          const pageId = widget.dataset.uploadPage;
+          const upload = ensureUploadTemplateState(pageId);
+          upload.tab = uploadTabBtn.dataset.uploadTab === "prompt" ? "prompt" : "demo";
+          markDirty();
+          renderUploadTemplateWidget(pageId);
+          return;
+        }
+
+        const uploadProjectAdd = e.target.closest("button[data-upload-project-act='add']");
+        if (uploadProjectAdd) {
+          const widget = uploadProjectAdd.closest(".upload-widget");
+          if (!widget) return;
+          const pageId = widget.dataset.uploadPage;
+          const upload = ensureUploadTemplateState(pageId);
+          const next = upload.projects.length + 1;
+          upload.projects.push({
+            name: `项目${next}`,
+            file: null,
+            fileUrl: "",
+            fileName: "",
+            htmlContent: "",
+            rounds: [
+              { name: "第一轮", content: "" },
+              { name: "第二轮", content: "" },
+              { name: "第三轮", content: "" },
+              { name: "第四轮", content: "" }
+            ],
+            activeRound: 0
+          });
+          upload.activeProject = upload.projects.length - 1;
+          markDirty();
+          renderUploadTemplateWidget(pageId);
+          return;
+        }
+
+        const uploadProjectBtn = e.target.closest("button[data-upload-project-index]");
+        if (uploadProjectBtn) {
+          const widget = uploadProjectBtn.closest(".upload-widget");
+          if (!widget) return;
+          const pageId = widget.dataset.uploadPage;
+          const upload = ensureUploadTemplateState(pageId);
+          const idx = Number(uploadProjectBtn.dataset.uploadProjectIndex);
+          if (!Number.isFinite(idx) || !upload.projects[idx]) return;
+          upload.activeProject = idx;
+          renderUploadTemplateWidget(pageId);
+          return;
+        }
+
+        const uploadShowBtn = e.target.closest("button[data-upload-show-demo]");
+        if (uploadShowBtn) {
+          const widget = uploadShowBtn.closest(".upload-widget");
+          if (!widget) return;
+          const pageId = widget.dataset.uploadPage;
+          const upload = ensureUploadTemplateState(pageId);
+          const project = upload.projects[upload.activeProject];
+          if (!project) return;
+          if (project.file && !project.htmlContent) {
+            project.htmlContent = await project.file.text();
+          }
+          if (project.fileUrl) URL.revokeObjectURL(project.fileUrl);
+          project.fileUrl = "";
+          if (project.htmlContent) {
+            project.fileUrl = URL.createObjectURL(new Blob([project.htmlContent], { type: "text/html" }));
+          }
+          markDirty();
+          renderUploadTemplateWidget(pageId);
+          return;
+        }
+
+        const uploadRoundAdd = e.target.closest("button[data-upload-round-act='add']");
+        if (uploadRoundAdd) {
+          const widget = uploadRoundAdd.closest(".upload-widget");
+          if (!widget) return;
+          const pageId = widget.dataset.uploadPage;
+          const upload = ensureUploadTemplateState(pageId);
+          const project = upload.projects[upload.activeProject];
+          if (!project) return;
+          const next = project.rounds.length + 1;
+          project.rounds.push({ name: `第${next}轮`, content: "" });
+          project.activeRound = project.rounds.length - 1;
+          markDirty();
+          renderUploadTemplateWidget(pageId);
+          return;
+        }
+
+        const uploadRoundBtn = e.target.closest("button[data-upload-round-index]");
+        if (uploadRoundBtn) {
+          const widget = uploadRoundBtn.closest(".upload-widget");
+          if (!widget) return;
+          const pageId = widget.dataset.uploadPage;
+          const upload = ensureUploadTemplateState(pageId);
+          const project = upload.projects[upload.activeProject];
+          if (!project) return;
+          const idx = Number(uploadRoundBtn.dataset.uploadRoundIndex);
+          if (!Number.isFinite(idx) || !project.rounds[idx]) return;
+          project.activeRound = idx;
+          renderUploadTemplateWidget(pageId);
+          return;
+        }
+
+        const uploadRenderBtn = e.target.closest("button[data-upload-render]");
+        if (uploadRenderBtn) {
+          const widget = uploadRenderBtn.closest(".upload-widget");
+          if (!widget) return;
+          const pageId = widget.dataset.uploadPage;
+          const upload = ensureUploadTemplateState(pageId);
+          const project = upload.projects[upload.activeProject];
+          const promptInput = widget.querySelector("[data-upload-prompt]");
+          if (project && promptInput) {
+            upload.prompt = promptInput.value;
+            const round = project.rounds[project.activeRound];
+            if (round) round.content = upload.prompt;
+          }
+          markDirty();
+          renderUploadTemplateWidget(pageId);
+          return;
+        }
+
+        const uploadClearBtn = e.target.closest("button[data-upload-clear]");
+        if (uploadClearBtn) {
+          const widget = uploadClearBtn.closest(".upload-widget");
+          if (!widget) return;
+          const pageId = widget.dataset.uploadPage;
+          const upload = ensureUploadTemplateState(pageId);
+          const project = upload.projects[upload.activeProject];
+          if (!project) return;
+          upload.prompt = "";
+          const round = project.rounds[project.activeRound];
+          if (round) round.content = "";
+          markDirty();
+          renderUploadTemplateWidget(pageId);
+          return;
+        }
+
+        const caseBtn = e.target.closest("button[data-case-act]");
+        if (caseBtn) {
+          const act = caseBtn.dataset.caseAct;
+          const idx = Number(caseBtn.dataset.caseIndex);
+          if (act === "add") state.cases.push(createCaseItem("新案例标题"));
+          if (Number.isFinite(idx) && state.cases[idx]) {
+            if (act === "del") state.cases.splice(idx, 1);
+            if (act === "up" && idx > 0) {
+              const tmp = state.cases[idx - 1];
+              state.cases[idx - 1] = state.cases[idx];
+              state.cases[idx] = tmp;
+            }
+            if (act === "down" && idx < state.cases.length - 1) {
+              const tmp = state.cases[idx + 1];
+              state.cases[idx + 1] = state.cases[idx];
+              state.cases[idx] = tmp;
+            }
+          }
+          if (!state.cases.length) state.cases.push(createCaseItem("新案例标题"));
+          markDirty();
+          renderCasesShowcase();
+          return;
+        }
+      });
+
+      els.slidesWrap.addEventListener("change", async (e) => {
+        if (e.target.dataset.coverField === "image") await handleCoverFileChange(e.target);
+        if (e.target.dataset.sectionField === "image") await handleSectionFileChange(e.target);
+        if (e.target.dataset.flowField === "images") await handleFlowFileChange(e.target);
+        if (e.target.dataset.caseField === "image") await handleCaseFileChange(e.target);
+        if (e.target.dataset.toolFile) await handleToolFileChange(e.target);
+        if (e.target.dataset.toolField) renderToolsShowcase();
+        if (e.target.dataset.coverField === "image" || e.target.dataset.sectionField === "image" || e.target.dataset.flowField === "images" || e.target.dataset.caseField === "image" || e.target.dataset.toolFile || e.target.dataset.toolField) {
+          markDirty();
+        }
+        const uploadFile = e.target.closest("input[data-upload-file]");
+        if (uploadFile) {
+          const widget = uploadFile.closest(".upload-widget");
+          if (!widget) return;
+          const pageId = widget.dataset.uploadPage;
+          const upload = ensureUploadTemplateState(pageId);
+          const project = upload.projects[upload.activeProject];
+          const file = uploadFile.files && uploadFile.files[0];
+          if (!project || !file) return;
+          project.file = file;
+          project.fileName = file.name || "";
+          project.htmlContent = await file.text();
+          if (project.fileUrl) URL.revokeObjectURL(project.fileUrl);
+          project.fileUrl = "";
+          markDirty();
+        }
+      });
+
+      els.slidesWrap.addEventListener("pointerdown", (e) => {
+        const img = e.target.closest("img[data-tool-drag]");
+        if (!img || !state.editMode) return;
+        const toolIndex = Number(img.dataset.toolIndex);
+        const resolvedToolIndex = Number.isFinite(toolIndex) ? toolIndex : state.activeToolIndex;
+        const tool = state.tools[resolvedToolIndex];
+        if (!tool) return;
+        const dragType = img.dataset.toolDrag === "detail" ? "detail" : "cover";
+        const xKey = dragType === "detail" ? "detailPosX" : "coverPosX";
+        const yKey = dragType === "detail" ? "detailPosY" : "coverPosY";
+        toolImageDragState = {
+          img,
+          dragType,
+          toolIndex: resolvedToolIndex,
+          startX: e.clientX,
+          startY: e.clientY,
+          startPosX: Number.isFinite(Number(tool[xKey])) ? Number(tool[xKey]) : 50,
+          startPosY: Number.isFinite(Number(tool[yKey])) ? Number(tool[yKey]) : 50,
+          moved: false,
+          pointerId: e.pointerId
+        };
+        if (typeof img.setPointerCapture === "function") {
+          try { img.setPointerCapture(e.pointerId); } catch (err) { /* no-op */ }
+        }
+        img.classList.add("dragging");
+        e.stopPropagation();
+        e.preventDefault();
+      });
+
+      window.addEventListener("pointermove", (e) => {
+        if (!toolImageDragState || !state.editMode) return;
+        const tool = state.tools[toolImageDragState.toolIndex];
+        if (!tool) return;
+        const rect = toolImageDragState.img.getBoundingClientRect();
+        const dx = e.clientX - toolImageDragState.startX;
+        const dy = e.clientY - toolImageDragState.startY;
+        const deltaX = rect.width > 0 ? (dx / rect.width) * 100 : 0;
+        const deltaY = rect.height > 0 ? (dy / rect.height) * 100 : 0;
+        const xKey = toolImageDragState.dragType === "detail" ? "detailPosX" : "coverPosX";
+        const yKey = toolImageDragState.dragType === "detail" ? "detailPosY" : "coverPosY";
+        const nextX = Math.max(0, Math.min(100, toolImageDragState.startPosX + deltaX));
+        const nextY = Math.max(0, Math.min(100, toolImageDragState.startPosY + deltaY));
+        tool[xKey] = Number(nextX.toFixed(2));
+        tool[yKey] = Number(nextY.toFixed(2));
+        toolImageDragState.img.style.objectPosition = `${tool[xKey]}% ${tool[yKey]}%`;
+        if (Math.abs(dx) > 2 || Math.abs(dy) > 2) toolImageDragState.moved = true;
+      });
+
+      window.addEventListener("pointerup", () => {
+        if (!toolImageDragState) return;
+        if (toolImageDragState.img) {
+          if (typeof toolImageDragState.img.releasePointerCapture === "function") {
+            try { toolImageDragState.img.releasePointerCapture(toolImageDragState.pointerId); } catch (err) { /* no-op */ }
+          }
+          toolImageDragState.img.classList.remove("dragging");
+        }
+        if (toolImageDragState.moved) {
+          suppressLightboxClick = true;
+          window.setTimeout(() => { suppressLightboxClick = false; }, 60);
+          if (toolImageDragState.toolIndex === state.activeToolIndex) {
+            liveUpdateToolImageSize();
+          }
+        }
+        toolImageDragState = null;
+      });
+
+      window.addEventListener("pointercancel", () => {
+        if (!toolImageDragState) return;
+        if (toolImageDragState.img) {
+          toolImageDragState.img.classList.remove("dragging");
+        }
+        toolImageDragState = null;
+      });
+
+      els.projectTabs.addEventListener("click", (e) => {
+        const addBtn = e.target.closest("button[data-project-act='add']");
+        if (addBtn) {
+          const next = state.upload.projects.length + 1;
+          state.upload.projects.push({
+            name: `项目${next}`,
+            file: null,
+            fileUrl: "",
+            fileName: "",
+            htmlContent: "",
+            rounds: [
+              { name: "第一轮", content: "" },
+              { name: "第二轮", content: "" },
+              { name: "第三轮", content: "" },
+              { name: "第四轮", content: "" }
+            ],
+            activeRound: 0
+          });
+          state.upload.activeProject = state.upload.projects.length - 1;
+          markDirty();
+          setUploadTab(state.upload.tab);
+          return;
+        }
+        const btn = e.target.closest("button[data-project-index]");
+        if (!btn) return;
+        const idx = Number(btn.dataset.projectIndex);
+        if (!Number.isFinite(idx) || !state.upload.projects[idx]) return;
+        state.upload.activeProject = idx;
+        setUploadTab(state.upload.tab);
+      });
+
+      els.demoFile.addEventListener("change", async (e) => {
+        const file = e.target.files && e.target.files[0];
+        const project = currentProject();
+        if (!file || !project) return;
+        project.file = file;
+        project.fileName = file.name || "";
+        project.htmlContent = await file.text();
+        if (project.fileUrl) URL.revokeObjectURL(project.fileUrl);
+        project.fileUrl = "";
+        markDirty();
+      });
+
+      els.showDemoBtn.addEventListener("click", () => {
+        const project = currentProject();
+        if (!project) return;
+        if (project.fileUrl) URL.revokeObjectURL(project.fileUrl);
+        project.fileUrl = "";
+        if (project.htmlContent) {
+          project.fileUrl = URL.createObjectURL(new Blob([project.htmlContent], { type: "text/html" }));
+        }
+        els.demoFrame.src = getProjectFrameUrl(project);
+        markDirty();
+      });
+
+      els.tabDemoBtn.addEventListener("click", () => setUploadTab("demo"));
+      els.tabPromptBtn.addEventListener("click", () => setUploadTab("prompt"));
+
+      els.promptRoundTabs.addEventListener("click", (e) => {
+        const addBtn = e.target.closest("button[data-round-act='add']");
+        const project = currentProject();
+        if (!project) return;
+        if (addBtn) {
+          const next = project.rounds.length + 1;
+          project.rounds.push({ name: `第${next}轮`, content: "" });
+          setPromptRound(project.rounds.length - 1);
+          return;
+        }
+        const btn = e.target.closest("button[data-round-index]");
+        if (!btn) return;
+        const idx = Number(btn.dataset.roundIndex);
+        setPromptRound(idx);
+      });
+
+      els.promptInput.addEventListener("input", () => {
+        state.upload.prompt = els.promptInput.value;
+        const round = currentRound();
+        if (round) round.content = state.upload.prompt;
+        autoResizePrompt();
+        markDirty();
+      });
+      els.renderPromptBtn.addEventListener("click", () => {
+        state.upload.prompt = els.promptInput.value;
+        const round = currentRound();
+        if (round) round.content = state.upload.prompt;
+        renderPromptPreview();
+        markDirty();
+      });
+      els.clearPromptBtn.addEventListener("click", () => {
+        state.upload.prompt = "";
+        const round = currentRound();
+        if (round) round.content = "";
+        els.promptInput.value = "";
+        autoResizePrompt();
+        renderPromptPreview();
+        markDirty();
+      });
+
+      els.lightboxClose.addEventListener("click", closeLightbox);
+      els.imageLightbox.addEventListener("click", (e) => {
+        if (e.target === els.imageLightbox) closeLightbox();
+      });
+
+      window.addEventListener("resize", renderAllFlowCanvases);
+    }
+
+    async function init() {
+      initPagesFromDom();
+      await loadPersistedState();
+      normalizeStateData();
+      bindEvents();
+      applySidebarCollapsed();
+      renderDirList();
+      renderAllDynamic();
+      renderPromptRounds();
+      renderPromptPreview();
+      autoResizePrompt();
+      setUploadTab("demo");
+      updateSlidesVisibility();
+      setEditMode(false);
+      if (location.protocol === "file:") {
+        setSaveStatus("warn", "当前为 file:// 模式，建议用 localhost 打开");
+      } else if (!state.lastPersistAt) {
+        setSaveStatus("dirty", "未保存");
+      }
+      startAutoSave();
+    }
+
+    init();
+  </script>
 </body>
 </html>
-<!-- 不蒜子统计 -->
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<!-- 显示总PV和UV（放在页面底部，比如footer） -->
-<div style="text-align:center; font-size:12px; color:#999;">
-  总访问量：<span id="busuanzi_value_site_pv"></span>次 | 访客数：<span id="busuanzi_value_site_uv"></span>人
-</div>
